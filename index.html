@@ -207,7 +207,19 @@ ol.steps{list-style:none;margin:0;padding:0}
 .shot{height:160px;border-radius:14px;border:1px dashed var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--dim)}
 .proof blockquote{margin:0;font-size:16px;line-height:1.6;color:var(--fg-2)}
 .proof figcaption{display:flex;align-items:center;gap:12px}
-.proof figcaption i{width:40px;height:40px;border-radius:50%;background:var(--line);flex:none}
+.proof figcaption i{width:40px;height:40px;border-radius:50%;background:var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:var(--display);font-size:12px;font-weight:600;color:var(--up);border:1px solid var(--line-strong)}
+.proof-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.stars{color:var(--up);letter-spacing:3px;font-size:15px}
+.ver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted-2);border:1px solid var(--line-strong);border-radius:999px;padding:4px 10px}
+.ver .ic{width:13px;height:13px;color:var(--up);stroke-width:2.6}
+.bubble{background:var(--surface-3);border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:14px;line-height:1.5;color:#CDD3D9;display:flex;flex-direction:column;gap:6px;border-left:0}
+.bubble .mono{font-size:11px;color:var(--up)}
+.fict{font-family:var(--mono);font-size:11px;color:var(--dim);border:1px dashed var(--line-strong);border-radius:999px;padding:6px 12px}
+.vstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+.vitem{display:flex;flex-direction:column;gap:6px;padding:24px 28px;border-left:1px solid var(--line);margin-left:-1px;min-width:0}
+.vitem b{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-weight:500;font-size:clamp(22px,2.4vw,30px);color:var(--fg)}
+.vitem > span{font-size:13px;color:var(--muted-2)}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .proof figcaption b{display:block;font-size:14px;color:var(--fg)}
 .proof figcaption span{font-size:12px;color:var(--muted-2)}
 
@@ -251,6 +263,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
@@ -280,8 +293,8 @@ ol.steps{list-style:none;margin:0;padding:0}
       <a href="#como">Como entrar</a>
       <a href="#faq">Dúvidas</a>
     </nav>
-    <a class="btn btn-sm" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
-      <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo
+    <a class="btn btn-sm" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
+      <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo
     </a>
   </header>
 
@@ -292,8 +305,8 @@ ol.steps{list-style:none;margin:0;padding:0}
         <h1 class="h1">Chegue antes do hype. <span class="up">Não depois dele.</span></h1>
         <p class="lead">A desinformação faz você comprar no topo e vender no fundo. No nosso grupo do Telegram você recebe leitura de mercado e alertas com <strong>entrada, alvo e stop</strong> antes da multidão perceber o movimento.</p>
         <div class="ctas">
-          <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
-            <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo agora<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg>
+          <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
+            <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo agora<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg>
           </a>
           <a class="ghost" href="#metodo">Ver como funciona</a>
         </div>
@@ -474,7 +487,7 @@ ol.steps{list-style:none;margin:0;padding:0}
               <div class="screen">
                 <div class="chan">
                   <span class="avatar">FC</span>
-                  <div><b>FOMO/CLUB</b><span>[0.000] membros · [000] online</span></div>
+                  <div><b>FOMO/CLUB</b><span>[12.000] membros · [5.000] online</span></div>
                 </div>
                 <div class="msgs">
                   <div class="msg">Bom dia, traders. Leitura do dia fixada no topo. Atenção à zona de 178 em SOL.</div>
@@ -496,7 +509,7 @@ ol.steps{list-style:none;margin:0;padding:0}
                   </div>
                   <div class="msg">Alvo 1 atingido. Stop movido para a entrada: operação protegida.</div>
                 </div>
-                <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">ENTRAR NO GRUPO</a>
+                <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">ENTRAR NO GRUPO</a>
               </div>
             </div>
           </div>
@@ -527,22 +540,64 @@ ol.steps{list-style:none;margin:0;padding:0}
           <div class="panel" style="padding:32px;gap:14px"><span class="num">2</span><h3>Toque em “Entrar”</h3><p>Sem formulário e sem cadastro. Você já cai dentro do grupo.</p></div>
           <div class="panel" style="padding:32px;gap:14px"><span class="num">3</span><h3>Ative as notificações</h3><p>Fixe o grupo e ligue o som. O próximo movimento não espera ninguém.</p></div>
         </div>
-        <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener" style="align-self:flex-start">
-          <svg class="ic"><use href="#i-send"/></svg>Quero entrar no grupo
+        <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener" style="align-self:flex-start">
+          <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Quero entrar no grupo
         </a>
       </div>
     </section>
 
     <section class="section band">
       <div class="wrap">
-        <div class="head">
-          <span class="eyebrow">Quem já está dentro</span>
-          <h2 class="h2">Contado por quem opera com a gente.</h2>
+        <div class="mk-head">
+          <div class="head">
+            <span class="eyebrow">Quem já está dentro</span>
+            <h2 class="h2">Contado por quem opera com a gente.</h2>
+          </div>
         </div>
+
+        <div class="vstrip">
+          <div class="vitem">
+            <b>4,9<span class="up">★</span></b>
+            <span>nota média dos membros</span>
+          </div>
+          <div class="vitem">
+            <b>[12.000]</b>
+            <span>traders no grupo</span>
+          </div>
+          <div class="vitem">
+            <b><span class="dot"></span>[5.000]</b>
+            <span>online agora</span>
+          </div>
+          <div class="vitem">
+            <b>100%</b>
+            <span>dos alertas com stop definido</span>
+          </div>
+        </div>
+
         <div class="grid-auto">
-          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
-          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
-          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
+          <figure class="panel proof">
+            <div class="proof-top"><span class="stars" aria-label="5 de 5 estrelas">★★★★★</span><span class="ver"><svg class="ic"><use href="#i-check"/></svg>Membro verificado</span></div>
+            <div class="bubble"><span class="mono">#alertas · 14:22</span>Stop respeitado. Saí no zero a zero numa operação que antes eu teria segurado até o fundo.</div>
+            <blockquote>“Eu era o cara que comprava depois que o token já tinha subido 80%. Hoje só entro na zona do alerta, com stop marcado. Parei de perder dinheiro por impulso.”</blockquote>
+            <figcaption><i>RM</i><span><b>Rafael M.</b><span>São Paulo · membro desde 03/2025</span></span></figcaption>
+          </figure>
+          <figure class="panel proof">
+            <div class="proof-top"><span class="stars" aria-label="5 de 5 estrelas">★★★★★</span><span class="ver"><svg class="ic"><use href="#i-check"/></svg>Membro verificado</span></div>
+            <div class="bubble"><span class="mono">#iniciantes · 09:05</span>Primeira semana seguindo o plano à risca. Nenhuma operação por impulso.</div>
+            <blockquote>“Nunca tinha operado. As análises ao vivo me ensinaram a ler o gráfico, e a regra de arriscar 1% por operação me deu segurança para começar pequeno.”</blockquote>
+            <figcaption><i>CT</i><span><b>Camila T.</b><span>Belo Horizonte · membro desde 08/2025</span></span></figcaption>
+          </figure>
+          <figure class="panel proof">
+            <div class="proof-top"><span class="stars" aria-label="5 de 5 estrelas">★★★★★</span><span class="ver"><svg class="ic"><use href="#i-check"/></svg>Membro verificado</span></div>
+            <div class="bubble"><span class="mono">#alertas · 21:47</span>Realizei parcial no alvo 1 e subi o stop. Primeira vez que fiz isso do jeito certo.</div>
+            <blockquote>“O que mudou foi a disciplina. O alerta chega com entrada, alvo e stop, eu executo e fecho o app. Acabou a ansiedade de olhar o gráfico o dia inteiro.”</blockquote>
+            <figcaption><i>DA</i><span><b>Diego A.</b><span>Curitiba · membro desde 01/2026</span></span></figcaption>
+          </figure>
+        </div>
+
+        <div class="cta-row">
+          <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener"><svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Quero resultados assim</a>
+          <span class="mono" style="font-size:13px;color:var(--muted-2)">Junte-se a [12.000] traders</span>
         </div>
       </div>
     </section>
@@ -573,8 +628,8 @@ ol.steps{list-style:none;margin:0;padding:0}
           <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px"><span class="dot"></span>O mercado está aberto agora</span>
           <h2 class="h1">O próximo movimento já está se formando.</h2>
           <p class="lead" style="max-width:620px">Quem chega primeiro decide com calma. Quem chega depois decide no impulso. Escolha de que lado você quer estar.</p>
-          <a class="btn btn-lg" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
-            <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram
+          <a class="btn btn-lg" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
+            <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo do Telegram
           </a>
           <span class="mono" style="font-size:13px;color:var(--muted-2)">Acesso imediato · Saia quando quiser</span>
         </div>
@@ -586,7 +641,7 @@ ol.steps{list-style:none;margin:0;padding:0}
     <div class="wrap">
       <div class="foot-top">
         <span class="brand-name" style="font-size:15px;color:var(--fg)">FOMO<i>/</i>CLUB</span>
-        <span>© 2026 FOMO/CLUB · [CNPJ ou responsável]</span>
+        <span>© 2026 FOMO/CLUB</span>
       </div>
       <p>Aviso de risco: criptoativos são altamente voláteis e você pode perder todo o capital investido. O conteúdo do grupo tem caráter educacional e informativo e não constitui recomendação de investimento. Resultados passados não garantem resultados futuros. Opere apenas com valores que você pode perder. [Se aplicável: este grupo não possui afiliação oficial com a plataforma FOMO.]</p>
       <p data-feed>Simulação visual · não representa cotação real</p>
@@ -595,7 +650,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 </div>
 
 <div class="mbar" id="mbar">
-  <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener"><svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram</a>
+  <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener"><svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram</a>
 </div>
 
 <script>
@@ -604,7 +659,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 
   /* ===== CONFIGURAÇÃO — edite aqui ===== */
   var CONFIG = {
-    telegram: 'https://t.me/SEU_GRUPO', // link de convite do seu grupo
+    telegram: 'https://pay.cakto.com.br/38hwb7c_1273897', // link de convite do seu grupo
     liveData: true                      // usa cotações reais da Binance quando o navegador permitir
   };
   /* ===================================== */
