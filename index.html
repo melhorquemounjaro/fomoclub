@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FOMO Club</title>
+<meta name="description" content="Grupo de trade de cripto no Telegram: alertas com entrada, alvo e stop, leitura diária do mercado e gestão de risco. Chegue antes do hype.">
+<meta name="theme-color" content="#07080A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FOMO Club · Chegue antes do hype">
+<meta property="og:description" content="Alertas com entrada, alvo e stop direto no seu Telegram.">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2307080A'/%3E%3Cpath d='m20 8-7 7-4-4-5 5M15 8h5v5' fill='none' stroke='%23C6FF3D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>body{margin:0}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: terminal de trading escuro — faixa de cotações, hero com gráfico ao vivo, seções em coluna de 1200px sobre grade fina */
+:root{
+  --bg:#07080A; --bg-deep:#050607; --band:rgba(5,6,7,.72);
+  --surface:#0B0D10; --surface-2:#0A0B0E; --surface-3:#14171B;
+  --line:#1A1E24; --line-soft:#14181D; --line-strong:#262C34;
+  --fg:#F5F7F8; --fg-2:#E9EDF1; --muted:#A9B1BA; --muted-2:#8E97A1; --dim:#7F8892;
+  --up:#C6FF3D; --up-hi:#DBFF7A; --down:#FF7A45; --ink:#07080A;
+  --glow:rgba(198,255,61,.18); --grid:rgba(255,255,255,.032);
+  --display:'Unbounded', 'Arial Black', system-ui, sans-serif;
+  --body:'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg-2);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+*,*::before,*::after{box-sizing:border-box}
+a{color:var(--up)}
+h1,h2,h3,h4{text-wrap:balance}
+.gridbg{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px}
+.wrap{max-width:1200px;margin-inline:auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+@media (min-width:761px){.wrap{padding-left:max(24px, env(safe-area-inset-left, 0px));padding-right:max(24px, env(safe-area-inset-right, 0px))}}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.up{color:var(--up)} .down{color:var(--down)}
+.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+/* ticker */
+.ticker{border-bottom:1px solid var(--line-soft);background:var(--bg-deep);overflow:hidden;height:40px;display:flex;align-items:center}
+.ticker-track{display:flex;width:max-content;gap:40px;padding-left:24px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;white-space:nowrap;animation:mq 46s linear infinite}
+.t-item{display:inline-flex;gap:10px;align-items:center}
+.t-item b{color:var(--fg);font-weight:500}
+.t-p{color:var(--muted)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* nav */
+.nav{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:22px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--fg)}
+.brand-mark{width:34px;height:34px;border-radius:10px;border:1px solid var(--up);display:flex;align-items:center;justify-content:center;color:var(--up)}
+.brand-name{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
+.brand-name i{font-style:normal;color:var(--up)}
+.nav-links{display:flex;gap:32px;font-size:14px}
+.nav-links a{color:var(--muted-2);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--fg)}
+@media (max-width:760px){.nav-links{display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:60px;padding:0 30px;border-radius:999px;background:var(--up);color:var(--ink);font-weight:600;font-size:17px;text-decoration:none;transition:transform .2s,box-shadow .2s,background-color .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 44px -12px rgba(198,255,61,.65);background:var(--up-hi);color:var(--ink)}
+.btn-sm{min-height:44px;padding:0 18px;font-size:14px;gap:8px}
+.btn-sm .ic{width:16px;height:16px}
+.btn-lg{min-height:64px;padding:0 36px;font-size:18px}
+.ghost{display:inline-flex;align-items:center;min-height:60px;padding:0 26px;border-radius:999px;border:1px solid var(--line-strong);color:var(--fg-2);font-weight:500;text-decoration:none;transition:border-color .2s,color .2s}
+.ghost:hover{border-color:var(--up);color:var(--up)}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset:3px;border-radius:12px}
+
+/* type */
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--up);text-transform:uppercase}
+.eyebrow.warn{color:var(--down)}
+.h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(34px,4.6vw,64px);line-height:1.04;letter-spacing:-.03em;color:var(--fg)}
+.h2{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(28px,3.8vw,52px);line-height:1.08;letter-spacing:-.03em;color:var(--fg)}
+.lead{margin:0;font-size:clamp(17px,1.4vw,19px);line-height:1.6;color:var(--muted);max-width:560px}
+.lead strong{color:var(--fg);font-weight:500}
+.note{margin:0;font-family:var(--mono);font-size:11px;color:var(--dim)}
+
+/* sections */
+.section{border-top:1px solid var(--line-soft)}
+.section > .wrap{padding-block:clamp(80px,10vw,120px);display:flex;flex-direction:column;gap:48px}
+.band{background:var(--band)}
+.head{display:flex;flex-direction:column;gap:16px;max-width:820px}
+.grid-auto{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.panel h3,.panel h4{margin:0;font-size:19px;font-weight:600;color:var(--fg)}
+.panel p{margin:0;font-size:15px;line-height:1.6;color:var(--muted-2)}
+.panel .ic{width:28px;height:28px;stroke-width:1.8}
+.hover{transition:border-color .25s,transform .25s}
+.hover:hover{border-color:rgba(198,255,61,.45);transform:translateY(-3px)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--up);display:inline-block;animation:pulse 1.8s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,255,61,.55)}70%{box-shadow:0 0 0 10px rgba(198,255,61,0)}100%{box-shadow:0 0 0 0 rgba(198,255,61,0)}}
+
+/* hero */
+.hero{display:flex;flex-wrap:wrap;gap:56px;align-items:center;padding-block:56px 120px}
+.hero-copy{flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:28px}
+.pill{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.checks{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:13px;color:var(--muted-2)}
+.checks span::before{content:"✓ ";color:var(--up)}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;border-top:1px solid var(--line);padding-top:24px}
+.stat{display:flex;flex-direction:column;gap:6px;min-width:0}
+.stat b{font-family:var(--display);font-weight:500;font-size:clamp(17px,2.1vw,26px);color:var(--fg);overflow-wrap:anywhere}
+.stat span{font-size:13px;color:var(--muted-2)}
+
+/* terminal */
+.term-wrap{flex:1 1 520px;min-width:0;position:relative;padding-bottom:68px}
+.term{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;overflow:hidden;box-shadow:0 40px 120px -40px var(--glow)}
+.corner{position:absolute;width:14px;height:14px;border-color:var(--up);border-style:solid;border-width:0}
+.c1{top:10px;left:10px;border-top-width:1px;border-left-width:1px}
+.c2{top:10px;right:10px;border-top-width:1px;border-right-width:1px}
+.c3{bottom:10px;left:10px;border-bottom-width:1px;border-left-width:1px}
+.c4{bottom:10px;right:10px;border-bottom-width:1px;border-right-width:1px}
+.term-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.pair{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--muted-2)}
+.price-row{display:flex;align-items:baseline;gap:12px;margin-top:8px}
+.price{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(26px,3vw,34px);font-weight:500;color:var(--fg);letter-spacing:-.02em}
+.tfs{display:flex;gap:6px;font-family:var(--mono);font-size:12px}
+.tfs span{padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted-2)}
+.tfs span.on{background:var(--up);border-color:var(--up);color:var(--ink);font-weight:500}
+.chart{position:relative;height:clamp(220px,26vw,300px);margin-top:18px}
+.chart svg{display:block;width:100%;height:100%}
+.tag{position:absolute;right:0;transform:translateY(-50%);background:var(--up);color:var(--ink);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:11px;font-weight:500;padding:3px 7px;border-radius:4px;transition:top .5s ease}
+.scan{position:absolute;top:0;bottom:0;width:1px;background:rgba(198,255,61,.22);animation:scan 7s linear infinite}
+@keyframes scan{from{left:0}to{left:100%}}
+.term-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted-2)}
+.term-foot b{color:var(--fg-2);font-weight:400}
+.toast{position:absolute;right:20px;bottom:0;width:310px;max-width:calc(100% - 40px);background:#101317;border:1px solid var(--line-strong);border-radius:16px;padding:14px 16px;display:flex;gap:12px;box-shadow:0 24px 60px -20px rgba(0,0,0,.8);animation:floaty 5s ease-in-out infinite}
+.toast-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--up);color:var(--ink);display:flex;align-items:center;justify-content:center}
+.toast-ic .ic{width:18px;height:18px}
+.toast-top{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+.toast-top b{color:var(--fg);font-weight:600}
+.toast p{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--muted)}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* markets */
+.mk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.mk-head p{margin:0;max-width:380px;font-size:15px;line-height:1.6;color:var(--muted-2)}
+.h2s{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(24px,3vw,38px);letter-spacing:-.02em;line-height:1.15;color:var(--fg)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
+.mcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.mc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mc-id{display:flex;align-items:center;gap:10px}
+.mc-sym{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--fg-2)}
+.mc-name{display:flex;flex-direction:column}
+.mc-name b{font-size:14px;font-weight:600;color:var(--fg)}
+.mc-name span{font-family:var(--mono);font-size:12px;color:var(--muted-2)}
+.mc-pct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--line-strong)}
+.mc-price{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:500;color:var(--fg);letter-spacing:-.02em}
+.mcard svg{display:block;width:100%;height:56px}
+
+/* pump chart */
+.pump{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:28px 28px 12px}
+.pump-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:var(--mono);font-size:12px;color:var(--muted-2);margin-bottom:8px}
+.pump-top span span{margin-left:18px}
+.scroll-x{overflow-x:auto}
+.scroll-x svg{display:block;width:100%;min-width:640px;overflow:visible}
+.draw{stroke-dasharray:1600;animation:draw 3.2s ease-out infinite alternate}
+@keyframes draw{from{stroke-dashoffset:1600}to{stroke-dashoffset:0}}
+.blink{animation:blink 1.6s ease-in-out infinite}
+@keyframes blink{50%{opacity:.25}}
+.sweep{transform-box:view-box;transform-origin:200px 200px;animation:sweep 5s linear infinite}
+@keyframes sweep{to{transform:rotate(360deg)}}
+
+/* method */
+.split{display:flex;flex-wrap:wrap;gap:56px;align-items:center}
+.split > div{flex:1 1 420px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.vs{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+.vs div{display:flex;gap:14px;align-items:center;font-size:16px;color:var(--fg-2)}
+.vs span{font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--up);border-radius:6px;padding:3px 7px;flex:none}
+.vs .was{background:var(--down)}
+.radar{width:100%;max-width:440px;display:block;margin-inline:auto}
+.sub{margin:0;font-family:var(--display);font-weight:500;font-size:22px;color:var(--fg)}
+
+/* phone */
+.split > .phone-col{align-items:center;justify-content:center}
+.phone{width:340px;max-width:100%;border:1px solid var(--line-strong);border-radius:46px;padding:12px;background:#0E1013;box-shadow:0 50px 120px -40px rgba(198,255,61,.22)}
+.screen{border-radius:36px;background:#090A0C;overflow:hidden;display:flex;flex-direction:column}
+.chan{display:flex;align-items:center;gap:12px;padding:22px 18px 14px;border-bottom:1px solid var(--line-soft)}
+.avatar{width:40px;height:40px;border-radius:50%;background:var(--up);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-weight:600;font-size:13px;flex:none}
+.chan b{display:block;font-size:15px;color:var(--fg)}
+.chan span{font-size:12px;color:var(--muted-2)}
+.msgs{padding:16px 14px;display:flex;flex-direction:column;gap:10px}
+.msg{align-self:flex-start;max-width:88%;background:var(--surface-3);border-radius:14px 14px 14px 4px;padding:10px 12px;font-size:13px;line-height:1.45;color:#CDD3D9}
+.alert{width:92%;max-width:92%;padding:12px;display:flex;flex-direction:column;gap:10px}
+.alert-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;color:var(--muted-2)}
+.badge{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--ink);background:var(--up);padding:3px 7px;border-radius:5px}
+.alert-pair{font-family:var(--display);font-size:16px;font-weight:500;color:var(--fg)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px}
+.kv dt{color:var(--muted-2)} .kv dd{margin:0;text-align:right;color:var(--fg)}
+.phone .btn{margin:6px 14px 18px;min-height:48px;border-radius:14px;justify-content:center;font-size:14px;letter-spacing:.06em}
+.steps{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.steps li{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.steps li > span{font-family:var(--mono);font-size:12px;color:var(--up);width:28px;flex:none}
+.steps li b{display:block;font-size:17px;font-weight:600;color:var(--fg)}
+.steps li p{margin:4px 0 0;font-size:15px;color:var(--muted-2)}
+ol.steps{list-style:none;margin:0;padding:0}
+
+/* how */
+.how .num{font-family:var(--display);font-size:72px;font-weight:600;line-height:1;color:var(--up)}
+
+/* proof */
+.proof{margin:0;gap:20px}
+.shot{height:160px;border-radius:14px;border:1px dashed var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.proof blockquote{margin:0;font-size:16px;line-height:1.6;color:var(--fg-2)}
+.proof figcaption{display:flex;align-items:center;gap:12px}
+.proof figcaption i{width:40px;height:40px;border-radius:50%;background:var(--line);flex:none}
+.proof figcaption b{display:block;font-size:14px;color:var(--fg)}
+.proof figcaption span{font-size:12px;color:var(--muted-2)}
+
+/* faq */
+.faq-list{border-top:1px solid var(--line)}
+.faq{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;min-height:72px;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:18px;font-weight:500;color:var(--fg)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--mono);font-size:22px;color:var(--muted-2);transition:color .2s}
+.faq[open] summary::after{content:"−"}
+.faq summary:hover::after{color:var(--up)}
+.faq p{margin:0 0 24px;font-size:16px;line-height:1.65;color:var(--muted-2);max-width:720px}
+
+/* final */
+.final{position:relative;border:1px solid var(--line-strong);border-radius:32px;padding:clamp(36px,6vw,80px) clamp(20px,6vw,80px);background:var(--surface);overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;gap:28px}
+.final > *{position:relative}
+.final svg.bg{position:absolute;left:0;bottom:0;width:100%;height:200px;opacity:.5}
+.final .h1{max-width:900px}
+
+/* footer */
+.foot{border-top:1px solid var(--line-soft);background:var(--bg-deep)}
+.foot .wrap{padding-block:48px 56px;display:flex;flex-direction:column;gap:24px}
+.foot-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--muted-2)}
+.foot p{margin:0;font-size:12px;line-height:1.7;color:var(--dim);max-width:900px}
+
+/* barra fixa no celular */
+.mbar{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));background:rgba(7,8,10,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-top:1px solid var(--line);transform:translateY(110%);transition:transform .3s ease}
+.mbar.show{transform:none}
+.mbar .btn{width:100%;justify-content:center;min-height:52px;font-size:16px}
+@media (min-width:761px){.mbar{display:none}}
+@media (max-width:760px){.foot .wrap{padding-bottom:110px}}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .ticker-track,.dot,.toast,.scan,.sweep,.blink,.draw{animation:none}
+  .draw{stroke-dasharray:none}
+}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
+  <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="m22 8-5 4 5 4V8z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+</svg>
+
+<div class="gridbg">
+
+  <div class="ticker" aria-label="Cotações das principais criptomoedas">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <header class="wrap nav">
+    <a class="brand" href="#topo" aria-label="FOMO Club, início">
+      <span class="brand-mark"><svg class="ic" style="width:18px;height:18px"><use href="#i-up"/></svg></span>
+      <span class="brand-name">FOMO<i>/</i>CLUB</span>
+    </a>
+    <nav class="nav-links" aria-label="Seções">
+      <a href="#mercado">Mercado</a>
+      <a href="#metodo">Método</a>
+      <a href="#como">Como entrar</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
+    <a class="btn btn-sm" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
+      <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo
+    </a>
+  </header>
+
+  <main>
+    <section id="topo" class="wrap hero">
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span>AO VIVO · TRADE DE CRIPTO NA FOMO</span>
+        <h1 class="h1">Chegue antes do hype. <span class="up">Não depois dele.</span></h1>
+        <p class="lead">A desinformação faz você comprar no topo e vender no fundo. No nosso grupo do Telegram você recebe leitura de mercado e alertas com <strong>entrada, alvo e stop</strong> antes da multidão perceber o movimento.</p>
+        <div class="ctas">
+          <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
+            <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo agora<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg>
+          </a>
+          <a class="ghost" href="#metodo">Ver como funciona</a>
+        </div>
+        <div class="checks">
+          <span>Acesso direto pelo Telegram</span>
+          <span>Entrada em um clique</span>
+          <span>Saia quando quiser</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>[12.000+]</b><span>traders no grupo</span></div>
+          <div class="stat"><b>[20]</b><span>alertas por semana</span></div>
+          <div class="stat"><b>[200]x</b><span>análises ao vivo/dia</span></div>
+        </div>
+      </div>
+
+      <div class="term-wrap">
+        <div class="term">
+          <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
+          <div class="term-top">
+            <div>
+              <div class="pair"><span class="dot"></span>BTC / USDT · 1m</div>
+              <div class="price-row">
+                <span class="price" id="hero-price">—</span>
+                <span class="mono" id="hero-pct" style="font-size:14px">—</span>
+              </div>
+            </div>
+            <div class="tfs" aria-hidden="true"><span class="on">1m</span><span>5m</span><span>15m</span><span>1h</span></div>
+          </div>
+          <div class="chart">
+            <svg viewBox="0 0 600 280" preserveAspectRatio="none" role="img" aria-label="Gráfico de candles do Bitcoin em tempo real">
+              <path d="M0 56H600M0 112H600M0 168H600M0 224H600" stroke="#161A1F" vector-effect="non-scaling-stroke" fill="none"/>
+              <path d="M120 0V280M240 0V280M360 0V280M480 0V280" stroke="#12161A" vector-effect="non-scaling-stroke" fill="none"/>
+              <path id="g-ma" fill="none" stroke="#C6FF3D" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+              <path id="g-upw" fill="none" stroke="#C6FF3D" vector-effect="non-scaling-stroke"/>
+              <path id="g-dnw" fill="none" stroke="#FF7A45" vector-effect="non-scaling-stroke"/>
+              <path id="g-upb" fill="#C6FF3D"/>
+              <path id="g-dnb" fill="#FF7A45"/>
+              <path id="g-line" fill="none" stroke="#C6FF3D" stroke-dasharray="4 4" vector-effect="non-scaling-stroke" opacity=".7"/>
+            </svg>
+            <span class="tag" id="hero-tag">—</span>
+            <span class="scan" aria-hidden="true"></span>
+          </div>
+          <div class="term-foot">
+            <span>MÁX <b id="hero-hi">—</b></span>
+            <span>MÍN <b id="hero-lo">—</b></span>
+            <span>MM9 <b class="up">ativa</b></span>
+            <span id="clock">--:--:--</span>
+          </div>
+        </div>
+        <div class="toast" aria-hidden="true">
+          <span class="toast-ic"><svg class="ic"><use href="#i-bell"/></svg></span>
+          <div>
+            <div class="toast-top"><b>FOMO/CLUB · Novo alerta</b><span class="mono" style="font-size:11px;color:var(--muted-2)">agora</span></div>
+            <p>BTC/USDT rompendo resistência. Entrada, alvos e stop já no grupo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mercado" class="section band" style="border-bottom:1px solid var(--line-soft)">
+      <div class="wrap" style="padding-block:72px;gap:32px">
+        <div class="mk-head">
+          <div class="head" style="gap:12px">
+            <span class="eyebrow">Mercado agora</span>
+            <h2 class="h2s">O mercado não dorme.<br>Seus alertas também não.</h2>
+          </div>
+          <p>Enquanto você trabalha, dorme ou rola o feed, o preço se move. O grupo monitora por você e avisa quando importa.</p>
+        </div>
+        <div class="cards" id="cards"></div>
+        <p class="note" data-feed>Simulação visual · não representa cotação real</p>
+      </div>
+    </section>
+
+    <section class="section" style="border-top:0">
+      <div class="wrap">
+        <div class="head">
+          <span class="eyebrow warn">O problema</span>
+          <h2 class="h2">A desinformação custa caro. Principalmente para quem opera sozinho.</h2>
+        </div>
+
+        <div class="pump">
+          <div class="pump-top">
+            <span>ANATOMIA DE UM PUMP</span>
+            <span><span class="up" style="margin:0">● quem está no grupo</span><span class="down">● quem opera no FOMO</span></span>
+          </div>
+          <div class="scroll-x">
+            <svg viewBox="0 0 1000 330" role="img" aria-label="Gráfico ilustrativo: o alerta do grupo chega no início da alta, enquanto quem opera por FOMO compra no topo e vende no fundo">
+              <path d="M0 290H1000" stroke="#1A1E24" fill="none"/>
+              <path d="M300 214 L360 168 L420 110 L470 70 L520 52 L520 290 L300 290 Z" fill="#C6FF3D" fill-opacity=".08"/>
+              <path class="draw" d="M0 250 L60 252 L120 246 L180 248 L240 236 L300 214 L360 168 L420 110 L470 70 L520 52 L570 80 L620 140 L680 200 L740 246 L800 238 L860 242 L920 232 L1000 236" fill="none" stroke="#E9EDF1" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+              <path d="M300 222V290" stroke="#C6FF3D" stroke-dasharray="3 4" fill="none"/>
+              <circle cx="300" cy="214" r="7" fill="#C6FF3D"/>
+              <circle class="blink" cx="300" cy="214" r="16" fill="none" stroke="#C6FF3D"/>
+              <text x="300" y="316" text-anchor="middle" font-family="Geist Mono, monospace" font-size="14" fill="#C6FF3D">ALERTA NO GRUPO</text>
+              <circle cx="520" cy="52" r="7" fill="#FF7A45"/>
+              <text x="542" y="40" font-family="Geist Mono, monospace" font-size="14" fill="#FF7A45">VOCÊ COMPRA AQUI</text>
+              <path d="M740 254V290" stroke="#FF7A45" stroke-dasharray="3 4" fill="none"/>
+              <circle cx="740" cy="246" r="7" fill="#FF7A45"/>
+              <text x="740" y="316" text-anchor="middle" font-family="Geist Mono, monospace" font-size="14" fill="#FF7A45">VOCÊ VENDE AQUI (PÂNICO)</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="grid-auto">
+          <div class="panel" style="background:var(--surface-2)">
+            <svg class="ic down"><use href="#i-up"/></svg>
+            <h3>Você entra quando já subiu</h3>
+            <p>Quando o token aparece no seu feed, quem estava posicionado já está realizando lucro. Você vira a liquidez de saída de alguém.</p>
+          </div>
+          <div class="panel" style="background:var(--surface-2)">
+            <svg class="ic down"><use href="#i-down"/></svg>
+            <h3>Você sai no pior momento</h3>
+            <p>Sem stop definido, cada candle vermelho vira pânico. A decisão deixa de ser técnica e passa a ser emocional.</p>
+          </div>
+          <div class="panel" style="background:var(--surface-2)">
+            <svg class="ic down"><use href="#i-eyeoff"/></svg>
+            <h3>Você opera no escuro</h3>
+            <p>Sem plano, sem gestão de risco e sem ninguém para trocar ideia. Cada erro sai do seu bolso, e você nem sabe por quê.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="metodo" class="section">
+      <div class="wrap" style="gap:56px">
+        <div class="split">
+          <div>
+            <span class="eyebrow">A virada</span>
+            <h2 class="h2">Faça parte do <span class="up">método.</span></h2>
+            <p class="lead">Dentro do grupo, o hype vira dado: volume, rompimento, fluxo e gestão de risco. Você para de reagir ao mercado e passa a se antecipar a ele, com um plano claro antes de cada clique.</p>
+            <div class="vs">
+              <div><span class="was">ANTES</span>Comprar porque todo mundo está comprando</div>
+              <div><span>AGORA</span>Entrar no nível certo, com alvo e stop definidos</div>
+            </div>
+          </div>
+          <div>
+            <svg class="radar" viewBox="0 0 400 400" role="img" aria-label="Radar escaneando o mercado em busca de rompimentos, volume e liquidez">
+              <circle cx="200" cy="200" r="180" fill="#0A0B0E" stroke="#1C2026"/>
+              <circle cx="200" cy="200" r="120" fill="none" stroke="#1C2026"/>
+              <circle cx="200" cy="200" r="60" fill="none" stroke="#1C2026"/>
+              <path d="M20 200H380M200 20V380" stroke="#161A1F" fill="none"/>
+              <g class="sweep">
+                <path d="M200 200 L200 20 A180 180 0 0 1 327 73 Z" fill="#C6FF3D" fill-opacity=".12"/>
+                <path d="M200 200 L327 73" stroke="#C6FF3D" stroke-width="1.5" fill="none"/>
+              </g>
+              <circle class="blink" cx="282" cy="128" r="6" fill="#C6FF3D"/>
+              <text x="294" y="124" font-family="Geist Mono, monospace" font-size="11" fill="#C6FF3D">ROMPIMENTO</text>
+              <circle class="blink" cx="118" cy="262" r="5" fill="#E9EDF1"/>
+              <text x="70" y="288" font-family="Geist Mono, monospace" font-size="11" fill="#AEB6BF">VOLUME ↑</text>
+              <circle class="blink" cx="292" cy="284" r="5" fill="#E9EDF1"/>
+              <text x="262" y="310" font-family="Geist Mono, monospace" font-size="11" fill="#AEB6BF">LIQUIDEZ</text>
+              <circle class="blink" cx="134" cy="128" r="5" fill="#FF7A45"/>
+              <text x="74" y="114" font-family="Geist Mono, monospace" font-size="11" fill="#FF7A45">EVITAR</text>
+              <circle cx="200" cy="200" r="5" fill="#C6FF3D"/>
+            </svg>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:24px">
+          <h3 class="sub">O que você recebe dentro do grupo</h3>
+          <div class="grid-auto">
+            <div class="panel hover"><svg class="ic up"><use href="#i-bell"/></svg><h4>Alertas em tempo real</h4><p>Par, zona de entrada, alvos e stop. Direto no seu Telegram, com notificação no celular.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-pulse"/></svg><h4>Leitura diária do mercado</h4><p>Todo dia: o que observar, onde estão os níveis importantes e o que evitar.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-shield"/></svg><h4>Gestão de risco em cada operação</h4><p>Tamanho de posição e stop em todo alerta. Proteger o capital vem antes de buscar lucro.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-target"/></svg><h4>Radar de tendências na FOMO</h4><p>Os ativos ganhando tração antes de virarem assunto, e os que é melhor deixar passar.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-video"/></svg><h4>Análises ao vivo</h4><p>Gráfico aberto e raciocínio explicado. Você aprende a ler o mercado enquanto acompanha.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-users"/></svg><h4>Comunidade ativa</h4><p>Traders trocando setups, dúvidas e aprendizados. Você para de operar sozinho.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band">
+      <div class="wrap">
+        <div class="split" style="flex-wrap:wrap-reverse;gap:64px">
+          <div class="phone-col" style="flex:1 1 340px">
+            <div class="phone">
+              <div class="screen">
+                <div class="chan">
+                  <span class="avatar">FC</span>
+                  <div><b>FOMO/CLUB</b><span>[0.000] membros · [000] online</span></div>
+                </div>
+                <div class="msgs">
+                  <div class="msg">Bom dia, traders. Leitura do dia fixada no topo. Atenção à zona de 178 em SOL.</div>
+                  <div class="msg alert">
+                    <div class="alert-top"><span class="badge">ALERTA · LONG</span><span>09:41</span></div>
+                    <span class="alert-pair">SOL / USDT</span>
+                    <svg viewBox="0 0 240 60" width="100%" height="54" aria-hidden="true" style="display:block">
+                      <path d="M0 22H240" stroke="#C6FF3D" stroke-opacity=".35" stroke-dasharray="3 3" fill="none"/>
+                      <path d="M0 46H240" stroke="#FF7A45" stroke-opacity=".45" stroke-dasharray="3 3" fill="none"/>
+                      <path d="M0 50 L20 46 L40 48 L60 42 L80 44 L100 40 L120 38 L140 41 L160 36 L180 30 L200 26 L220 20 L240 14" fill="none" stroke="#C6FF3D" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <dl class="kv" style="margin:0">
+                      <dt>Entrada</dt><dd>178,20 – 179,10</dd>
+                      <dt>Alvo 1</dt><dd class="up">184,50</dd>
+                      <dt>Alvo 2</dt><dd class="up">189,80</dd>
+                      <dt>Stop</dt><dd class="down">174,90</dd>
+                      <dt>Risco</dt><dd>1% da banca</dd>
+                    </dl>
+                  </div>
+                  <div class="msg">Alvo 1 atingido. Stop movido para a entrada: operação protegida.</div>
+                </div>
+                <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">ENTRAR NO GRUPO</a>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1 1 460px;gap:24px">
+            <span class="eyebrow">Por dentro</span>
+            <h2 class="h2">Cada alerta chega pronto para executar.</h2>
+            <p class="lead">Nada de “acho que vai subir”. Todo alerta segue a mesma estrutura, para você decidir em segundos e sem emoção.</p>
+            <ol class="steps">
+              <li><span>01</span><div><b>Par e direção</b><p>Qual ativo e se a leitura é de alta ou de baixa.</p></div></li>
+              <li><span>02</span><div><b>Zona de entrada</b><p>Uma faixa de preço, não um “compra agora”. Você entra sem correr atrás.</p></div></li>
+              <li><span>03</span><div><b>Alvos parciais</b><p>Onde realizar lucro, em etapas, antes da euforia virar queda.</p></div></li>
+              <li><span class="down">04</span><div><b>Stop obrigatório e risco sugerido</b><p>O ponto de saída se a leitura falhar e quanto da banca expor. Sempre.</p></div></li>
+            </ol>
+            <p class="note" style="font-size:12px">Exemplo ilustrativo da estrutura. Não é recomendação de investimento.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como" class="section how">
+      <div class="wrap">
+        <div class="head">
+          <span class="eyebrow">Como entrar</span>
+          <h2 class="h2">Três passos. Menos de um minuto.</h2>
+        </div>
+        <div class="grid-auto">
+          <div class="panel" style="padding:32px;gap:14px"><span class="num">1</span><h3>Clique no botão</h3><p>Você é levado direto para o convite oficial do grupo no Telegram.</p></div>
+          <div class="panel" style="padding:32px;gap:14px"><span class="num">2</span><h3>Toque em “Entrar”</h3><p>Sem formulário e sem cadastro. Você já cai dentro do grupo.</p></div>
+          <div class="panel" style="padding:32px;gap:14px"><span class="num">3</span><h3>Ative as notificações</h3><p>Fixe o grupo e ligue o som. O próximo movimento não espera ninguém.</p></div>
+        </div>
+        <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener" style="align-self:flex-start">
+          <svg class="ic"><use href="#i-send"/></svg>Quero entrar no grupo
+        </a>
+      </div>
+    </section>
+
+    <section class="section band">
+      <div class="wrap">
+        <div class="head">
+          <span class="eyebrow">Quem já está dentro</span>
+          <h2 class="h2">Contado por quem opera com a gente.</h2>
+        </div>
+        <div class="grid-auto">
+          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
+          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
+          <figure class="panel proof"><div class="shot">[Print real do membro]</div><blockquote>“[Depoimento real de um membro, com autorização para publicar.]”</blockquote><figcaption><i></i><span><b>[Nome do membro]</b><span>[Membro desde 00/0000]</span></span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="wrap" style="max-width:900px;gap:40px">
+        <div class="head">
+          <span class="eyebrow">Dúvidas</span>
+          <h2 class="h2">Perguntas frequentes</h2>
+        </div>
+        <div class="faq-list">
+          <details class="faq" open><summary>O grupo é pago?</summary><p>[Defina aqui: gratuito, ou o valor e o que está incluso.]</p></details>
+          <details class="faq"><summary>Preciso ter experiência com trade?</summary><p>Não. Os alertas vêm com entrada, alvo e stop, e as análises ao vivo mostram o raciocínio por trás de cada operação. Você aprende operando com contexto.</p></details>
+          <details class="faq"><summary>Quanto preciso para começar?</summary><p>Comece com um valor que você aceita perder enquanto aprende. Todo alerta traz o risco sugerido para você dimensionar a posição de acordo com a sua banca.</p></details>
+          <details class="faq"><summary>Os alertas garantem lucro?</summary><p>Não, e desconfie de quem promete isso. Trade de cripto envolve risco alto. O que entregamos é método, contexto e gestão de risco para você tomar decisões melhores.</p></details>
+          <details class="faq"><summary>Como eu saio do grupo?</summary><p>A qualquer momento, com um toque no Telegram. Sem fidelidade e sem burocracia.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="final">
+          <svg class="bg" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+            <path id="big-area" fill="#C6FF3D" fill-opacity=".06"/>
+            <path id="big-line" fill="none" stroke="#C6FF3D" stroke-opacity=".5" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          </svg>
+          <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px"><span class="dot"></span>O mercado está aberto agora</span>
+          <h2 class="h1">O próximo movimento já está se formando.</h2>
+          <p class="lead" style="max-width:620px">Quem chega primeiro decide com calma. Quem chega depois decide no impulso. Escolha de que lado você quer estar.</p>
+          <a class="btn btn-lg" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener">
+            <svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram
+          </a>
+          <span class="mono" style="font-size:13px;color:var(--muted-2)">Acesso imediato · Saia quando quiser</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot-top">
+        <span class="brand-name" style="font-size:15px;color:var(--fg)">FOMO<i>/</i>CLUB</span>
+        <span>© 2026 FOMO/CLUB · [CNPJ ou responsável]</span>
+      </div>
+      <p>Aviso de risco: criptoativos são altamente voláteis e você pode perder todo o capital investido. O conteúdo do grupo tem caráter educacional e informativo e não constitui recomendação de investimento. Resultados passados não garantem resultados futuros. Opere apenas com valores que você pode perder. [Se aplicável: este grupo não possui afiliação oficial com a plataforma FOMO.]</p>
+      <p data-feed>Simulação visual · não representa cotação real</p>
+    </div>
+  </footer>
+</div>
+
+<div class="mbar" id="mbar">
+  <a class="btn" data-tg href="https://t.me/SEU_GRUPO" target="_blank" rel="noopener"><svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram</a>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ===== CONFIGURAÇÃO — edite aqui ===== */
+  var CONFIG = {
+    telegram: 'https://t.me/SEU_GRUPO', // link de convite do seu grupo
+    liveData: true                      // usa cotações reais da Binance quando o navegador permitir
+  };
+  /* ===================================== */
+
+  document.querySelectorAll('[data-tg]').forEach(function (a) { a.href = CONFIG.telegram; });
+
+  var UP = '#C6FF3D', DOWN = '#FF7A45';
+  var ASSETS = [
+    { sym: 'BTC', name: 'Bitcoin', p: 103800, vol: .0012 },
+    { sym: 'ETH', name: 'Ethereum', p: 3820, vol: .0016 },
+    { sym: 'SOL', name: 'Solana', p: 182.4, vol: .0022 },
+    { sym: 'BNB', name: 'BNB', p: 712, vol: .0014 },
+    { sym: 'XRP', name: 'XRP', p: 2.41, vol: .002 },
+    { sym: 'DOGE', name: 'Dogecoin', p: .218, vol: .0028 },
+    { sym: 'AVAX', name: 'Avalanche', p: 31.6, vol: .0024 },
+    { sym: 'LINK', name: 'Chainlink', p: 18.9, vol: .0022 }
+  ];
+  var S = { live: false, candles: [], assets: [], big: [] };
+  var n = 0;
+  var $ = function (id) { return document.getElementById(id); };
+  var rnd = function () { return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5; };
+
+  function fmt(v) {
+    if (v >= 1000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (v >= 1) return v.toFixed(2);
+    return v.toFixed(4);
+  }
+  function signed(p) { return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
+
+  function seed() {
+    var cs = [], p = ASSETS[0].p;
+    for (var i = 0; i < 56; i++) {
+      var o = p, c = o * (1 + rnd() * .0028 + .0002);
+      cs.push({ t: i, o: o, c: c, h: Math.max(o, c) * (1 + Math.random() * .0012), l: Math.min(o, c) * (1 - Math.random() * .0012) });
+      p = c;
+    }
+    S.candles = cs;
+    S.assets = ASSETS.map(function (a, idx) {
+      var s = [];
+      if (idx === 0) s = cs.slice(-48).map(function (c) { return c.c; });
+      else { var v = a.p; for (var k = 0; k < 48; k++) { v *= 1 + rnd() * a.vol * 2 + .0001; s.push(v); } }
+      return { sym: a.sym, name: a.name, vol: a.vol, series: s, ref: s[0], open24: null };
+    });
+  }
+
+  function simTick() {
+    n++;
+    var cs = S.candles, last = cs[cs.length - 1];
+    var v = last.c * (1 + rnd() * .0011 + .00004);
+    last.c = v; last.h = Math.max(last.h, v); last.l = Math.min(last.l, v);
+    if (n % 7 === 0) { cs.shift(); cs.push({ t: last.t + 1, o: v, h: v, l: v, c: v }); }
+    S.assets.forEach(function (a, i) {
+      var s = a.series;
+      s.push(i === 0 ? v : s[s.length - 1] * (1 + rnd() * a.vol));
+      s.shift();
+    });
+  }
+
+  function spark(series, W, H) {
+    var mn = Math.min.apply(null, series), mx = Math.max.apply(null, series), r = (mx - mn) || 1;
+    var step = W / (series.length - 1), line = '';
+    series.forEach(function (v, i) {
+      line += (i ? 'L' : 'M') + (i * step).toFixed(1) + ' ' + (4 + (H - 8) * (1 - (v - mn) / r)).toFixed(1);
+    });
+    return { line: line, area: line + 'L' + W + ' ' + H + 'L0 ' + H + 'Z' };
+  }
+
+  /* ----- montar ticker e cards ----- */
+  var tRefs = [], cRefs = [];
+  function build() {
+    var tk = $('ticker'); tk.innerHTML = '';
+    for (var r = 0; r < 2; r++) {
+      S.assets.forEach(function (a, i) {
+        var el = document.createElement('span');
+        el.className = 't-item';
+        if (r === 1) el.setAttribute('aria-hidden', 'true');
+        el.innerHTML = '<b>' + a.sym + '/USDT</b><span class="t-p"></span><span class="t-c"></span>';
+        tk.appendChild(el);
+        tRefs.push({ i: i, p: el.querySelector('.t-p'), c: el.querySelector('.t-c') });
+      });
+    }
+    var cards = $('cards'); cards.innerHTML = '';
+    S.assets.slice(0, 4).forEach(function (a, i) {
+      var el = document.createElement('div');
+      el.className = 'mcard hover';
+      el.innerHTML =
+        '<div class="mc-top"><div class="mc-id"><span class="mc-sym">' + a.sym + '</span>' +
+        '<div class="mc-name"><b>' + a.name + '</b><span>' + a.sym + '/USDT</span></div></div>' +
+        '<span class="mc-pct"></span></div>' +
+        '<span class="mc-price"></span>' +
+        '<svg viewBox="0 0 200 56" preserveAspectRatio="none" aria-hidden="true">' +
+        '<path class="mc-area" fill-opacity=".09"/><path class="mc-line" fill="none" stroke-width="1.6" vector-effect="non-scaling-stroke" stroke-linejoin="round"/></svg>';
+      cards.appendChild(el);
+      cRefs.push({ i: i, pct: el.querySelector('.mc-pct'), price: el.querySelector('.mc-price'), area: el.querySelector('.mc-area'), line: el.querySelector('.mc-line') });
+    });
+  }
+
+  function assetView(a) {
+    var p = a.series[a.series.length - 1];
+    var base = (S.live && a.open24) ? a.open24 : a.ref;
+    var ch = (p / base - 1) * 100;
+    return { price: fmt(p), pct: signed(ch), up: ch >= 0 };
+  }
+
+  function renderHero() {
+    var W = 600, H = 280, pad = 14, cs = S.candles, len = cs.length, step = W / len, bw = step * .56;
+    var mn = Infinity, mx = -Infinity;
+    cs.forEach(function (c) { if (c.l < mn) mn = c.l; if (c.h > mx) mx = c.h; });
+    var hi = mx, lo = mn, r = (mx - mn) || 1;
+    mn -= r * .08; mx += r * .08;
+    var y = function (v) { return pad + (H - 2 * pad) * (1 - (v - mn) / (mx - mn)); };
+    var upB = '', dnB = '', upW = '', dnW = '', ma = '';
+    cs.forEach(function (c, i) {
+      var x = i * step + (step - bw) / 2, cx = i * step + step / 2;
+      var top = y(Math.max(c.o, c.c)), h = Math.max(1.2, y(Math.min(c.o, c.c)) - top);
+      var rect = 'M' + x.toFixed(1) + ' ' + top.toFixed(1) + 'h' + bw.toFixed(1) + 'v' + h.toFixed(1) + 'h' + (-bw).toFixed(1) + 'Z';
+      var wick = 'M' + cx.toFixed(1) + ' ' + y(c.h).toFixed(1) + 'V' + y(c.l).toFixed(1);
+      if (c.c >= c.o) { upB += rect; upW += wick; } else { dnB += rect; dnW += wick; }
+      if (i >= 8) {
+        var s = 0; for (var k = i - 8; k <= i; k++) s += cs[k].c;
+        ma += (ma ? 'L' : 'M') + cx.toFixed(1) + ' ' + y(s / 9).toFixed(1);
+      }
+    });
+    $('g-upb').setAttribute('d', upB || 'M0 0');
+    $('g-dnb').setAttribute('d', dnB || 'M0 0');
+    $('g-upw').setAttribute('d', upW || 'M0 0');
+    $('g-dnw').setAttribute('d', dnW || 'M0 0');
+    $('g-ma').setAttribute('d', ma || 'M0 0');
+    var lastC = cs[len - 1].c, ly = y(lastC);
+    $('g-line').setAttribute('d', 'M0 ' + ly.toFixed(1) + 'H' + W);
+    var tag = $('hero-tag');
+    tag.style.top = (ly / H * 100).toFixed(2) + '%';
+    tag.textContent = fmt(lastC);
+    $('hero-price').textContent = fmt(lastC);
+    var btc = S.assets[0];
+    var ref = (S.live && btc.open24) ? btc.open24 : cs[0].o;
+    var pct = (lastC / ref - 1) * 100, pe = $('hero-pct');
+    pe.textContent = signed(pct) + (S.live && btc.open24 ? ' 24h' : '');
+    pe.style.color = pct >= 0 ? UP : DOWN;
+    $('hero-hi').textContent = fmt(hi);
+    $('hero-lo').textContent = fmt(lo);
+  }
+
+  function renderAssets() {
+    var views = S.assets.map(assetView);
+    tRefs.forEach(function (t) {
+      var v = views[t.i];
+      t.p.textContent = v.price;
+      t.c.textContent = (v.up ? '▲ ' : '▼ ') + v.pct;
+      t.c.style.color = v.up ? UP : DOWN;
+    });
+    cRefs.forEach(function (c) {
+      var v = views[c.i], col = v.up ? UP : DOWN, sp = spark(S.assets[c.i].series, 200, 56);
+      c.price.textContent = v.price;
+      c.pct.textContent = v.pct;
+      c.pct.style.color = col;
+      c.area.setAttribute('d', sp.area); c.area.setAttribute('fill', col);
+      c.line.setAttribute('d', sp.line); c.line.setAttribute('stroke', col);
+    });
+  }
+
+  function renderBig() {
+    var sp = spark(S.big, 1000, 200);
+    $('big-line').setAttribute('d', sp.line);
+    $('big-area').setAttribute('d', sp.area);
+  }
+
+  function renderClock() {
+    var d = new Date(), p = function (x) { return String(x).padStart(2, '0'); };
+    $('clock').textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
+
+  function render() { renderHero(); renderAssets(); renderClock(); }
+
+  function setFeed(live) {
+    document.querySelectorAll('[data-feed]').forEach(function (el) {
+      el.textContent = live ? 'Cotações ao vivo via Binance · variação de 24h' : 'Simulação visual · não representa cotação real';
+    });
+  }
+
+  /* ----- dados reais (Binance) com volta automática para simulação ----- */
+  function timeout(p, ms) {
+    return Promise.race([p, new Promise(function (_, rej) { setTimeout(function () { rej(new Error('timeout')); }, ms); })]);
+  }
+  function getJSON(u) { return fetch(u).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); }); }
+
+  function goLive() {
+    if (!CONFIG.liveData || !('WebSocket' in window) || !window.fetch) return;
+    var API = 'https://data-api.binance.vision/api/v3/klines';
+    var reqs = [getJSON(API + '?symbol=BTCUSDT&interval=1m&limit=56')].concat(
+      S.assets.map(function (a) { return getJSON(API + '?symbol=' + a.sym + 'USDT&interval=15m&limit=48'); }));
+    var ws;
+    timeout(Promise.all(reqs), 6000).then(function (res) {
+      var streams = ['btcusdt@kline_1m'].concat(S.assets.map(function (a) { return a.sym.toLowerCase() + 'usdt@miniTicker'; })).join('/');
+      ws = new WebSocket('wss://data-stream.binance.vision/stream?streams=' + streams);
+      return timeout(new Promise(function (ok, fail) { ws.onopen = ok; ws.onerror = fail; }), 6000).then(function () { return res; });
+    }).then(function (res) {
+      S.candles = res[0].map(function (k) { return { t: k[0], o: +k[1], h: +k[2], l: +k[3], c: +k[4] }; });
+      S.assets.forEach(function (a, i) { a.series = res[i + 1].map(function (k) { return +k[4]; }); a.ref = a.series[0]; a.open24 = null; });
+      S.live = true; setFeed(true); render();
+      ws.onmessage = function (e) {
+        var d = JSON.parse(e.data).data; if (!d) return;
+        if (d.e === 'kline') {
+          var k = d.k, c = { t: k.t, o: +k.o, h: +k.h, l: +k.l, c: +k.c }, cs = S.candles, last = cs[cs.length - 1];
+          if (last && last.t === c.t) cs[cs.length - 1] = c;
+          else { cs.push(c); if (cs.length > 56) cs.shift(); }
+          var b = S.assets[0].series; b[b.length - 1] = c.c;
+        } else if (d.e === '24hrMiniTicker') {
+          var a = S.assets.find(function (x) { return x.sym + 'USDT' === d.s; });
+          if (a) { a.series[a.series.length - 1] = +d.c; a.open24 = +d.o; }
+        }
+      };
+      var drop = function () {
+        if (!S.live) return;
+        S.live = false; setFeed(false); seed(); render();
+        setTimeout(goLive, 15000);
+      };
+      ws.onclose = drop; ws.onerror = drop;
+    }).catch(function () {
+      try { if (ws) ws.close(); } catch (e) {}
+      /* sem acesso à Binance: continua na simulação */
+    });
+  }
+
+  /* ----- barra fixa no celular ----- */
+  var bar = $('mbar'), heroEnd = $('topo');
+  function onScroll() {
+    var past = heroEnd.getBoundingClientRect().bottom < 0;
+    var nearEnd = window.innerHeight + window.scrollY > document.body.scrollHeight - 700;
+    bar.classList.toggle('show', past && !nearEnd);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ----- iniciar ----- */
+  seed();
+  var b = 100;
+  for (var i = 0; i < 80; i++) { b *= 1 + rnd() * .012 + .003; S.big.push(b); }
+  build(); render(); renderBig(); setFeed(false); onScroll();
+  setInterval(function () { if (!S.live) simTick(); render(); }, 800);
+  setInterval(function () { S.big.push(S.big[S.big.length - 1] * (1 + rnd() * .012 + .002)); S.big.shift(); renderBig(); }, 1600);
+  goLive();
+})();
+</script>
+
+</body>
+</html>
