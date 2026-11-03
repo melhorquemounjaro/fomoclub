@@ -4,26 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FOMO Club</title>
-<meta name="description" content="Grupo de trade de cripto no Telegram: alertas com entrada, alvo e stop, leitura diária do mercado e gestão de risco. Chegue antes do hype.">
+<meta name="description" content="A onda global das memecoins está chegando ao Brasil. Radar global, alertas com entrada, alvo e stop, filtro anti-golpe. Faça o teste e veja se você está apto para operar.">
 <meta name="theme-color" content="#07080A">
 <meta property="og:type" content="website">
-<meta property="og:title" content="FOMO Club · Chegue antes do hype">
-<meta property="og:description" content="Alertas com entrada, alvo e stop direto no seu Telegram.">
+<meta property="og:title" content="FOMO Club · Você está apto para operar memecoins?">
+<meta property="og:description" content="Faça o teste de 60 segundos e entre no grupo do Telegram.">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2307080A'/%3E%3Cpath d='m20 8-7 7-4-4-5 5M15 8h5v5' fill='none' stroke='%23C6FF3D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
-<style>body{margin:0}</style>
+<style>body{margin:0}[hidden]{display:none!important}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: terminal de trading escuro — faixa de cotações, hero com gráfico ao vivo, seções em coluna de 1200px sobre grade fina */
+/* Layout: terminal de trading escuro, faixa de cotações, hero com gráfico ao vivo, seções em coluna de 1200px sobre grade fina, teste em tela cheia antes do Telegram */
 :root{
   --bg:#07080A; --bg-deep:#050607; --band:rgba(5,6,7,.72);
   --surface:#0B0D10; --surface-2:#0A0B0E; --surface-3:#14171B;
   --line:#1A1E24; --line-soft:#14181D; --line-strong:#262C34;
   --fg:#F5F7F8; --fg-2:#E9EDF1; --muted:#A9B1BA; --muted-2:#8E97A1; --dim:#7F8892;
   --up:#C6FF3D; --up-hi:#DBFF7A; --down:#FF7A45; --ink:#07080A;
-  --glow:rgba(198,255,61,.18); --grid:rgba(255,255,255,.032);
+  --glow:rgba(198,255,61,.18); --grid:rgba(255,255,255,.032); --veil:rgba(7,8,10,.58); --scrim:rgba(4,5,6,.86);
   --display:'Unbounded', 'Arial Black', system-ui, sans-serif;
   --body:'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono:'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -31,9 +31,16 @@
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--fg-2);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:clip}
+body.locked{overflow:hidden}
 *,*::before,*::after{box-sizing:border-box}
 a{color:var(--up)}
 h1,h2,h3,h4{text-wrap:balance}
+button{font:inherit}
+/* vídeos de fundo */
+.bgv{position:fixed;inset:0;z-index:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));overflow:hidden;pointer-events:none;background:var(--bg)}
+.bgv video{width:100%;height:100%;object-fit:cover;filter:blur(1px) saturate(1.15) brightness(.55);transform:scale(1.25)}
+.bgv::after{content:"";position:absolute;inset:0;background:var(--veil)}
+.gridbg{position:relative;z-index:1}
 .gridbg{background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:64px 64px}
 .wrap{max-width:1200px;margin-inline:auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
 @media (min-width:761px){.wrap{padding-left:max(24px, env(safe-area-inset-left, 0px));padding-right:max(24px, env(safe-area-inset-right, 0px))}}
@@ -43,10 +50,11 @@ h1,h2,h3,h4{text-wrap:balance}
 
 /* ticker */
 .ticker{border-bottom:1px solid var(--line-soft);background:var(--bg-deep);overflow:hidden;height:40px;display:flex;align-items:center}
-.ticker-track{display:flex;width:max-content;gap:40px;padding-left:24px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;white-space:nowrap;animation:mq 46s linear infinite}
+.ticker-track{display:flex;width:max-content;gap:40px;padding-left:24px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;white-space:nowrap;animation:mq 52s linear infinite}
 .t-item{display:inline-flex;gap:10px;align-items:center}
 .t-item b{color:var(--fg);font-weight:500}
 .t-p{color:var(--muted)}
+.t-meme{font-size:9px;letter-spacing:.08em;color:var(--ink);background:var(--up);border-radius:3px;padding:1px 4px}
 @keyframes mq{to{transform:translateX(-50%)}}
 
 /* nav */
@@ -61,21 +69,22 @@ h1,h2,h3,h4{text-wrap:balance}
 @media (max-width:760px){.nav-links{display:none}}
 
 /* buttons */
-.btn{display:inline-flex;align-items:center;gap:12px;min-height:60px;padding:0 30px;border-radius:999px;background:var(--up);color:var(--ink);font-weight:600;font-size:17px;text-decoration:none;transition:transform .2s,box-shadow .2s,background-color .2s}
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:60px;padding:0 30px;border-radius:999px;border:0;cursor:pointer;background:var(--up);color:var(--ink);font-weight:600;font-size:17px;text-decoration:none;transition:transform .2s,box-shadow .2s,background-color .2s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 14px 44px -12px rgba(198,255,61,.65);background:var(--up-hi);color:var(--ink)}
 .btn-sm{min-height:44px;padding:0 18px;font-size:14px;gap:8px}
 .btn-sm .ic{width:16px;height:16px}
 .btn-lg{min-height:64px;padding:0 36px;font-size:18px}
-.ghost{display:inline-flex;align-items:center;min-height:60px;padding:0 26px;border-radius:999px;border:1px solid var(--line-strong);color:var(--fg-2);font-weight:500;text-decoration:none;transition:border-color .2s,color .2s}
+.ghost{display:inline-flex;align-items:center;min-height:60px;padding:0 26px;border-radius:999px;border:1px solid var(--line-strong);background:transparent;color:var(--fg-2);font-weight:500;text-decoration:none;cursor:pointer;transition:border-color .2s,color .2s}
 .ghost:hover{border-color:var(--up);color:var(--up)}
-a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset:3px;border-radius:12px}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset:3px;border-radius:12px}
+.btn-note{font-family:var(--mono);font-size:12px;color:var(--muted-2)}
 
 /* type */
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--up);text-transform:uppercase}
 .eyebrow.warn{color:var(--down)}
-.h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(34px,4.6vw,64px);line-height:1.04;letter-spacing:-.03em;color:var(--fg)}
+.h1{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(32px,4.4vw,60px);line-height:1.05;letter-spacing:-.03em;color:var(--fg)}
 .h2{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(28px,3.8vw,52px);line-height:1.08;letter-spacing:-.03em;color:var(--fg)}
-.lead{margin:0;font-size:clamp(17px,1.4vw,19px);line-height:1.6;color:var(--muted);max-width:560px}
+.lead{margin:0;font-size:clamp(17px,1.4vw,19px);line-height:1.6;color:var(--muted);max-width:580px}
 .lead strong{color:var(--fg);font-weight:500}
 .note{margin:0;font-family:var(--mono);font-size:11px;color:var(--dim)}
 
@@ -91,12 +100,15 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 .panel .ic{width:28px;height:28px;stroke-width:1.8}
 .hover{transition:border-color .25s,transform .25s}
 .hover:hover{border-color:rgba(198,255,61,.45);transform:translateY(-3px)}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--up);display:inline-block;animation:pulse 1.8s infinite}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--up);display:inline-block;flex:none;animation:pulse 1.8s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,255,61,.55)}70%{box-shadow:0 0 0 10px rgba(198,255,61,0)}100%{box-shadow:0 0 0 0 rgba(198,255,61,0)}}
+.mk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.mk-head p{margin:0;max-width:400px;font-size:15px;line-height:1.6;color:var(--muted-2)}
+.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 
 /* hero */
-.hero{display:flex;flex-wrap:wrap;gap:56px;align-items:center;padding-block:56px 120px}
-.hero-copy{flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:28px}
+.hero{display:flex;flex-wrap:wrap;gap:56px;align-items:center;padding-block:48px 120px}
+.hero-copy{flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:26px}
 .pill{display:inline-flex;align-self:flex-start;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
 .ctas{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
 .checks{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:13px;color:var(--muted-2)}
@@ -107,7 +119,7 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 .stat span{font-size:13px;color:var(--muted-2)}
 
 /* terminal */
-.term-wrap{flex:1 1 520px;min-width:0;position:relative;padding-bottom:68px}
+.term-wrap{flex:1 1 500px;min-width:0;position:relative;padding-bottom:68px}
 .term{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:22px;overflow:hidden;box-shadow:0 40px 120px -40px var(--glow)}
 .corner{position:absolute;width:14px;height:14px;border-color:var(--up);border-style:solid;border-width:0}
 .c1{top:10px;left:10px;border-top-width:1px;border-left-width:1px}
@@ -116,8 +128,9 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 .c4{bottom:10px;right:10px;border-bottom-width:1px;border-right-width:1px}
 .term-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
 .pair{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:13px;color:var(--muted-2)}
-.price-row{display:flex;align-items:baseline;gap:12px;margin-top:8px}
-.price{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(26px,3vw,34px);font-weight:500;color:var(--fg);letter-spacing:-.02em}
+.pair .t-meme{font-size:10px}
+.price-row{display:flex;align-items:baseline;gap:12px;margin-top:8px;flex-wrap:wrap}
+.price{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:clamp(24px,3vw,34px);font-weight:500;color:var(--fg);letter-spacing:-.02em}
 .tfs{display:flex;gap:6px;font-family:var(--mono);font-size:12px}
 .tfs span{padding:6px 10px;border-radius:8px;border:1px solid var(--line);color:var(--muted-2)}
 .tfs span.on{background:var(--up);border-color:var(--up);color:var(--ink);font-weight:500}
@@ -128,7 +141,7 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 @keyframes scan{from{left:0}to{left:100%}}
 .term-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-soft);font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;color:var(--muted-2)}
 .term-foot b{color:var(--fg-2);font-weight:400}
-.toast{position:absolute;right:20px;bottom:0;width:310px;max-width:calc(100% - 40px);background:#101317;border:1px solid var(--line-strong);border-radius:16px;padding:14px 16px;display:flex;gap:12px;box-shadow:0 24px 60px -20px rgba(0,0,0,.8);animation:floaty 5s ease-in-out infinite}
+.toast{position:absolute;right:20px;bottom:0;width:320px;max-width:calc(100% - 40px);background:#101317;border:1px solid var(--line-strong);border-radius:16px;padding:14px 16px;display:flex;gap:12px;box-shadow:0 24px 60px -20px rgba(0,0,0,.8);animation:floaty 5s ease-in-out infinite}
 .toast-ic{flex:none;width:38px;height:38px;border-radius:50%;background:var(--up);color:var(--ink);display:flex;align-items:center;justify-content:center}
 .toast-ic .ic{width:18px;height:18px}
 .toast-top{display:flex;justify-content:space-between;gap:8px;font-size:13px}
@@ -136,17 +149,33 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 .toast p{margin:4px 0 0;font-size:13px;line-height:1.45;color:var(--muted)}
 @keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
+/* janela global */
+.clocks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+.clock{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:10px}
+.clock-top{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--muted-2)}
+.clock b{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:500;color:var(--fg)}
+.clock .city{font-size:14px;color:var(--fg-2);font-weight:500}
+.bars{display:flex;align-items:flex-end;gap:3px;height:28px}
+.bars i{flex:1;background:var(--up);opacity:.75;border-radius:2px;animation:eq 1.4s ease-in-out infinite alternate}
+.bars i:nth-child(2){animation-delay:.2s}.bars i:nth-child(3){animation-delay:.5s}.bars i:nth-child(4){animation-delay:.1s}.bars i:nth-child(5){animation-delay:.35s}.bars i:nth-child(6){animation-delay:.6s}.bars i:nth-child(7){animation-delay:.25s}.bars i:nth-child(8){animation-delay:.45s}
+@keyframes eq{from{height:20%}to{height:100%}}
+.clock.br{border:1px dashed var(--up)}
+.clock.br .bars i{opacity:.3;animation-duration:2.6s}
+.clock.br .clock-top{color:var(--up)}
+.why3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));border-top:1px solid var(--line)}
+.why3 div{padding:24px 24px 0 0;display:flex;flex-direction:column;gap:8px}
+.why3 b{font-family:var(--display);font-weight:500;font-size:24px;color:var(--fg)}
+.why3 p{margin:0;font-size:15px;line-height:1.6;color:var(--muted-2);max-width:340px}
+
 /* markets */
-.mk-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
-.mk-head p{margin:0;max-width:380px;font-size:15px;line-height:1.6;color:var(--muted-2)}
 .h2s{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(24px,3vw,38px);letter-spacing:-.02em;line-height:1.15;color:var(--fg)}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:16px}
 .mcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px}
 .mc-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .mc-id{display:flex;align-items:center;gap:10px}
-.mc-sym{width:36px;height:36px;border-radius:50%;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--fg-2)}
+.mc-sym{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--fg-2)}
 .mc-name{display:flex;flex-direction:column}
-.mc-name b{font-size:14px;font-weight:600;color:var(--fg)}
+.mc-name b{font-size:14px;font-weight:600;color:var(--fg);display:flex;gap:6px;align-items:center}
 .mc-name span{font-family:var(--mono);font-size:12px;color:var(--muted-2)}
 .mc-pct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px;padding:4px 8px;border-radius:6px;border:1px solid var(--line-strong)}
 .mc-price{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:24px;font-weight:500;color:var(--fg);letter-spacing:-.02em}
@@ -192,36 +221,42 @@ a:focus-visible,summary:focus-visible{outline:2px solid var(--up);outline-offset
 .kv{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:12px}
 .kv dt{color:var(--muted-2)} .kv dd{margin:0;text-align:right;color:var(--fg)}
 .phone .btn{margin:6px 14px 18px;min-height:48px;border-radius:14px;justify-content:center;font-size:14px;letter-spacing:.06em}
-.steps{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
 .steps li{display:flex;gap:20px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline}
 .steps li > span{font-family:var(--mono);font-size:12px;color:var(--up);width:28px;flex:none}
 .steps li b{display:block;font-size:17px;font-weight:600;color:var(--fg)}
 .steps li p{margin:4px 0 0;font-size:15px;color:var(--muted-2)}
-ol.steps{list-style:none;margin:0;padding:0}
 
 /* how */
 .how .num{font-family:var(--display);font-size:72px;font-weight:600;line-height:1;color:var(--up)}
 
 /* proof */
 .proof{margin:0;gap:20px}
-.shot{height:160px;border-radius:14px;border:1px dashed var(--line-strong);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--dim)}
 .proof blockquote{margin:0;font-size:16px;line-height:1.6;color:var(--fg-2)}
 .proof figcaption{display:flex;align-items:center;gap:12px}
 .proof figcaption i{width:40px;height:40px;border-radius:50%;background:var(--line);flex:none;display:flex;align-items:center;justify-content:center;font-style:normal;font-family:var(--display);font-size:12px;font-weight:600;color:var(--up);border:1px solid var(--line-strong)}
+.proof figcaption b{display:block;font-size:14px;color:var(--fg)}
+.proof figcaption span{font-size:12px;color:var(--muted-2)}
 .proof-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .stars{color:var(--up);letter-spacing:3px;font-size:15px}
 .ver{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:var(--muted-2);border:1px solid var(--line-strong);border-radius:999px;padding:4px 10px}
 .ver .ic{width:13px;height:13px;color:var(--up);stroke-width:2.6}
-.bubble{background:var(--surface-3);border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:14px;line-height:1.5;color:#CDD3D9;display:flex;flex-direction:column;gap:6px;border-left:0}
+.bubble{background:var(--surface-3);border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:14px;line-height:1.5;color:#CDD3D9;display:flex;flex-direction:column;gap:6px}
 .bubble .mono{font-size:11px;color:var(--up)}
 .fict{font-family:var(--mono);font-size:11px;color:var(--dim);border:1px dashed var(--line-strong);border-radius:999px;padding:6px 12px}
-.vstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border:1px solid var(--line);border-radius:20px;background:var(--surface)}
+.vstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));border:1px solid var(--line);border-radius:20px;background:var(--surface);overflow:hidden}
 .vitem{display:flex;flex-direction:column;gap:6px;padding:24px 28px;border-left:1px solid var(--line);margin-left:-1px;min-width:0}
 .vitem b{display:inline-flex;align-items:center;gap:10px;font-family:var(--display);font-weight:500;font-size:clamp(22px,2.4vw,30px);color:var(--fg)}
 .vitem > span{font-size:13px;color:var(--muted-2)}
-.cta-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
-.proof figcaption b{display:block;font-size:14px;color:var(--fg)}
-.proof figcaption span{font-size:12px;color:var(--muted-2)}
+
+/* teste: chamada na página */
+.qcall{position:relative;border:1px solid var(--line-strong);border-radius:32px;background:var(--surface);overflow:hidden;display:flex;flex-wrap:wrap;gap:40px;padding:clamp(28px,5vw,64px);align-items:center}
+.qcall > div{flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.qmeta{display:flex;flex-wrap:wrap;gap:8px}
+.qmeta span{font-family:var(--mono);font-size:12px;color:var(--fg-2);border:1px solid var(--line-strong);border-radius:999px;padding:6px 12px}
+.qlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.qlist li{display:flex;gap:14px;align-items:center;padding:16px 18px;border-radius:14px;background:var(--surface-3);font-size:15px;color:var(--fg-2)}
+.qlist li span{font-family:var(--mono);font-size:11px;color:var(--up);width:22px;flex:none}
 
 /* faq */
 .faq-list{border-top:1px solid var(--line)}
@@ -252,10 +287,55 @@ ol.steps{list-style:none;margin:0;padding:0}
 @media (min-width:761px){.mbar{display:none}}
 @media (max-width:760px){.foot .wrap{padding-bottom:110px}}
 
+/* teste: janela */
+.qz{position:fixed;inset:0;z-index:50;background:var(--scrim);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(16px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.qz-box{position:relative;width:100%;max-width:640px;max-height:100%;overflow-y:auto;background:var(--surface);border:1px solid var(--line-strong);border-radius:28px;padding:clamp(22px,4vw,40px);display:flex;flex-direction:column;gap:24px;box-shadow:0 50px 140px -40px rgba(198,255,61,.25);animation:qin .35s ease}
+@keyframes qin{from{opacity:0;transform:translateY(16px) scale(.98)}to{opacity:1;transform:none}}
+.qz-head{display:flex;align-items:center;gap:16px}
+.qz-step{font-family:var(--mono);font-size:12px;color:var(--muted-2);white-space:nowrap}
+.qz-bar{flex:1;height:4px;border-radius:4px;background:var(--line);overflow:hidden}
+.qz-bar i{display:block;height:100%;background:var(--up);border-radius:4px;transition:width .4s ease}
+.qz-x{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-strong);background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none}
+.qz-x:hover{color:var(--fg);border-color:var(--muted-2)}
+.qz-q{margin:0;font-family:var(--display);font-weight:500;font-size:clamp(20px,2.6vw,28px);line-height:1.2;letter-spacing:-.02em;color:var(--fg)}
+.qz-sub{margin:-12px 0 0;font-size:14px;color:var(--muted-2)}
+.qz-opts{display:flex;flex-direction:column;gap:10px}
+.qz-opt{display:flex;align-items:center;gap:14px;width:100%;min-height:60px;padding:14px 18px;border-radius:16px;border:1px solid var(--line-strong);background:var(--surface-3);color:var(--fg-2);font-size:16px;line-height:1.4;text-align:left;cursor:pointer;transition:border-color .2s,background-color .2s,transform .15s}
+.qz-opt:hover{border-color:var(--up);background:#171B12}
+.qz-opt:active{transform:scale(.99)}
+.qz-opt.sel{border-color:var(--up);background:#1A2110}
+.qz-opt kbd{font-family:var(--mono);font-size:11px;color:var(--up);border:1px solid var(--line-strong);border-radius:6px;width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--surface)}
+.qz-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;font-family:var(--mono);font-size:12px;color:var(--dim)}
+.qz-back{background:none;border:0;color:var(--muted-2);cursor:pointer;min-height:44px;padding:0 4px;font-family:var(--mono);font-size:12px}
+.qz-back:hover{color:var(--fg)}
+.qz-load{display:flex;flex-direction:column;gap:18px;padding-block:24px}
+.qz-load li{display:flex;gap:12px;align-items:center;font-family:var(--mono);font-size:13px;color:var(--dim);transition:color .3s}
+.qz-load li.on{color:var(--fg-2)}
+.qz-load li.on::before{content:"✓";color:var(--up)}
+.qz-load li:not(.on)::before{content:"·"}
+.qz-load ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.res-label{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--up)}
+.res-label.warn{color:var(--down)}
+.res-title{margin:0;font-family:var(--display);font-weight:600;font-size:clamp(24px,3.4vw,36px);line-height:1.1;letter-spacing:-.02em;color:var(--fg)}
+.res-chip{display:inline-flex;align-self:flex-start;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;color:var(--ink);background:var(--up);border-radius:999px;padding:6px 12px;font-weight:500}
+.meter{display:flex;flex-direction:column;gap:8px}
+.meter-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted-2)}
+.meter-top b{color:var(--up);font-weight:500;font-size:14px}
+.meter-bar{height:10px;border-radius:10px;background:var(--line);overflow:hidden}
+.meter-bar i{display:block;height:100%;width:0;background:var(--up);border-radius:10px;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.res-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.res-list li{display:flex;gap:12px;font-size:15px;line-height:1.5;color:var(--fg-2)}
+.res-list li::before{content:"→";font-family:var(--mono);color:var(--up);flex:none}
+.res-text{margin:0;font-size:16px;line-height:1.6;color:var(--muted)}
+.res-actions{display:flex;flex-direction:column;gap:12px}
+.res-actions .btn{justify-content:center}
+.res-actions .ghost{justify-content:center;min-height:52px;font-size:15px}
+
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .ticker-track,.dot,.toast,.scan,.sweep,.blink,.draw{animation:none}
+  .ticker-track,.dot,.toast,.scan,.sweep,.blink,.draw,.bars i,.qz-box{animation:none}
   .draw{stroke-dasharray:none}
+  .meter-bar i,.qz-bar i{transition:none}
 }
 </style>
 
@@ -264,21 +344,29 @@ ol.steps{list-style:none;margin:0;padding:0}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
   <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
   <symbol id="i-down" viewBox="0 0 24 24"><path d="m22 17-8.5-8.5-5 5L2 7"/><path d="M16 17h6v-6"/></symbol>
-  <symbol id="i-eyeoff" viewBox="0 0 24 24"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.53 13.53 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><path d="m2 2 20 20"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
   <symbol id="i-pulse" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></symbol>
-  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
-  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5 7h14"/><path d="m5 7-3 7a4 4 0 0 0 6 0z"/><path d="m19 7-3 7a4 4 0 0 0 6 0z"/></symbol>
   <symbol id="i-video" viewBox="0 0 24 24"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="m22 8-5 4 5 4V8z"/></symbol>
   <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
 </svg>
 
+<div class="bgv" aria-hidden="true">
+  <video src="video/bg1.mp4" poster="video/bg1.jpg" autoplay muted loop playsinline preload="auto"></video>
+  <video src="video/bg2.mp4" poster="video/bg2.jpg" autoplay muted loop playsinline preload="auto"></video>
+  <video src="video/bg3.mp4" poster="video/bg3.jpg" autoplay muted loop playsinline preload="auto"></video>
+</div>
+
 <div class="gridbg">
 
-  <div class="ticker" aria-label="Cotações das principais criptomoedas">
+  <div class="ticker" aria-label="Cotações de criptomoedas e memecoins">
     <div class="ticker-track" id="ticker"></div>
   </div>
 
@@ -288,37 +376,37 @@ ol.steps{list-style:none;margin:0;padding:0}
       <span class="brand-name">FOMO<i>/</i>CLUB</span>
     </a>
     <nav class="nav-links" aria-label="Seções">
-      <a href="#mercado">Mercado</a>
+      <a href="#janela">Por que agora</a>
       <a href="#metodo">Método</a>
-      <a href="#como">Como entrar</a>
+      <a href="#depoimentos">Depoimentos</a>
       <a href="#faq">Dúvidas</a>
     </nav>
-    <a class="btn btn-sm" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
-      <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo
+    <a class="btn btn-sm" href="#teste" data-quiz>
+      <svg class="ic"><use href="#i-check"/></svg>Fazer o teste
     </a>
   </header>
 
   <main>
     <section id="topo" class="wrap hero">
       <div class="hero-copy">
-        <span class="pill"><span class="dot"></span>AO VIVO · TRADE DE CRIPTO NA FOMO</span>
-        <h1 class="h1">Chegue antes do hype. <span class="up">Não depois dele.</span></h1>
-        <p class="lead">A desinformação faz você comprar no topo e vender no fundo. No nosso grupo do Telegram você recebe leitura de mercado e alertas com <strong>entrada, alvo e stop</strong> antes da multidão perceber o movimento.</p>
+        <span class="pill"><span class="dot"></span>A ONDA GLOBAL DAS MEMECOINS CHEGOU</span>
+        <h1 class="h1">As memecoins já movimentam o mundo. <span class="up">No Brasil, a corrida está só começando.</span></h1>
+        <p class="lead">Enquanto traders nos EUA e na Ásia operam memecoins 24 horas por dia, a maioria dos brasileiros só descobre o token quando ele já virou notícia. No nosso grupo do Telegram você recebe o <strong>radar global</strong>, alertas com <strong>entrada, alvo e stop</strong> e um filtro contra golpes, antes de o assunto chegar aqui.</p>
         <div class="ctas">
-          <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
-            <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo agora<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg>
+          <a class="btn" href="#teste" data-quiz>
+            Ver se estou apto para operar<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg>
           </a>
-          <a class="ghost" href="#metodo">Ver como funciona</a>
+          <a class="ghost" href="#janela">Por que agora?</a>
         </div>
         <div class="checks">
-          <span>Acesso direto pelo Telegram</span>
-          <span>Entrada em um clique</span>
-          <span>Saia quando quiser</span>
+          <span>Teste gratuito de 60 segundos</span>
+          <span>Resultado na hora</span>
+          <span>Acesso ao grupo logo depois</span>
         </div>
         <div class="stats">
           <div class="stat"><b>[12.000+]</b><span>traders no grupo</span></div>
           <div class="stat"><b>[20]</b><span>alertas por semana</span></div>
-          <div class="stat"><b>[200]x</b><span>análises ao vivo/dia</span></div>
+          <div class="stat"><b>24/7</b><span>radar global ligado</span></div>
         </div>
       </div>
 
@@ -327,7 +415,7 @@ ol.steps{list-style:none;margin:0;padding:0}
           <span class="corner c1"></span><span class="corner c2"></span><span class="corner c3"></span><span class="corner c4"></span>
           <div class="term-top">
             <div>
-              <div class="pair"><span class="dot"></span>BTC / USDT · 1m</div>
+              <div class="pair"><span class="dot"></span><span id="hero-pair">PEPE / USDT</span> · 1m <span class="t-meme">MEME</span></div>
               <div class="price-row">
                 <span class="price" id="hero-price">—</span>
                 <span class="mono" id="hero-pct" style="font-size:14px">—</span>
@@ -336,7 +424,7 @@ ol.steps{list-style:none;margin:0;padding:0}
             <div class="tfs" aria-hidden="true"><span class="on">1m</span><span>5m</span><span>15m</span><span>1h</span></div>
           </div>
           <div class="chart">
-            <svg viewBox="0 0 600 280" preserveAspectRatio="none" role="img" aria-label="Gráfico de candles do Bitcoin em tempo real">
+            <svg viewBox="0 0 600 280" preserveAspectRatio="none" role="img" aria-label="Gráfico de candles de uma memecoin em tempo real">
               <path d="M0 56H600M0 112H600M0 168H600M0 224H600" stroke="#161A1F" vector-effect="non-scaling-stroke" fill="none"/>
               <path d="M120 0V280M240 0V280M360 0V280M480 0V280" stroke="#12161A" vector-effect="non-scaling-stroke" fill="none"/>
               <path id="g-ma" fill="none" stroke="#C6FF3D" stroke-opacity=".35" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
@@ -359,28 +447,53 @@ ol.steps{list-style:none;margin:0;padding:0}
         <div class="toast" aria-hidden="true">
           <span class="toast-ic"><svg class="ic"><use href="#i-bell"/></svg></span>
           <div>
-            <div class="toast-top"><b>FOMO/CLUB · Novo alerta</b><span class="mono" style="font-size:11px;color:var(--muted-2)">agora</span></div>
-            <p>BTC/USDT rompendo resistência. Entrada, alvos e stop já no grupo.</p>
+            <div class="toast-top"><b>FOMO/CLUB · Radar global</b><span class="mono" style="font-size:11px;color:var(--muted-2)">agora</span></div>
+            <p>Volume de memecoins subindo na Ásia. Entrada, alvos e stop já no grupo.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="mercado" class="section band" style="border-bottom:1px solid var(--line-soft)">
-      <div class="wrap" style="padding-block:72px;gap:32px">
+    <section id="janela" class="section band">
+      <div class="wrap">
+        <div class="mk-head">
+          <div class="head">
+            <span class="eyebrow">Por que agora</span>
+            <h2 class="h2">Começou lá fora. O Brasil ainda está chegando.</h2>
+          </div>
+          <p>As memecoins viraram um dos mercados mais ativos do mundo cripto. Quem entende o jogo enquanto ele ainda é novo por aqui sai na frente de quem só chega quando virou moda.</p>
+        </div>
+        <div class="clocks" id="clocks">
+          <div class="clock" data-tz="America/New_York"><div class="clock-top"><span>EUA</span><span>ATIVO</span></div><span class="city">Nova York</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="clock" data-tz="Europe/London"><div class="clock-top"><span>UK</span><span>ATIVO</span></div><span class="city">Londres</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="clock" data-tz="Asia/Dubai"><div class="clock-top"><span>EAU</span><span>ATIVO</span></div><span class="city">Dubai</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="clock" data-tz="Asia/Singapore"><div class="clock-top"><span>SGP</span><span>ATIVO</span></div><span class="city">Singapura</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="clock" data-tz="Asia/Seoul"><div class="clock-top"><span>KOR</span><span>ATIVO</span></div><span class="city">Seul</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          <div class="clock br" data-tz="America/Sao_Paulo"><div class="clock-top"><span>BRA</span><span>CHEGANDO</span></div><span class="city">São Paulo</span><b>--:--</b><div class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        </div>
+        <div class="why3">
+          <div><b class="up">24/7</b><p>O mercado não fecha. Enquanto você dorme, a Ásia está operando, e o movimento chega aqui pronto.</p></div>
+          <div><b>Global</b><p>Liquidez vinda de vários continentes. Um token pode multiplicar de volume em horas quando o mundo inteiro olha para ele.</p></div>
+          <div><b>Cedo</b><p>Por aqui, a maioria ainda está descobrindo. Quem aprende o método agora não precisa correr atrás depois.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mercado" class="section">
+      <div class="wrap" style="gap:32px">
         <div class="mk-head">
           <div class="head" style="gap:12px">
             <span class="eyebrow">Mercado agora</span>
-            <h2 class="h2s">O mercado não dorme.<br>Seus alertas também não.</h2>
+            <h2 class="h2s">Do Bitcoin às memecoins.<br>Um radar só.</h2>
           </div>
-          <p>Enquanto você trabalha, dorme ou rola o feed, o preço se move. O grupo monitora por você e avisa quando importa.</p>
+          <p>As moedas grandes dão a direção. As memecoins dão o movimento. O grupo acompanha as duas e avisa quando importa.</p>
         </div>
         <div class="cards" id="cards"></div>
         <p class="note" data-feed>Simulação visual · não representa cotação real</p>
       </div>
     </section>
 
-    <section class="section" style="border-top:0">
+    <section class="section band">
       <div class="wrap">
         <div class="head">
           <span class="eyebrow warn">O problema</span>
@@ -389,7 +502,7 @@ ol.steps{list-style:none;margin:0;padding:0}
 
         <div class="pump">
           <div class="pump-top">
-            <span>ANATOMIA DE UM PUMP</span>
+            <span>ANATOMIA DE UM PUMP DE MEMECOIN</span>
             <span><span class="up" style="margin:0">● quem está no grupo</span><span class="down">● quem opera no FOMO</span></span>
           </div>
           <div class="scroll-x">
@@ -402,7 +515,7 @@ ol.steps{list-style:none;margin:0;padding:0}
               <circle class="blink" cx="300" cy="214" r="16" fill="none" stroke="#C6FF3D"/>
               <text x="300" y="316" text-anchor="middle" font-family="Geist Mono, monospace" font-size="14" fill="#C6FF3D">ALERTA NO GRUPO</text>
               <circle cx="520" cy="52" r="7" fill="#FF7A45"/>
-              <text x="542" y="40" font-family="Geist Mono, monospace" font-size="14" fill="#FF7A45">VOCÊ COMPRA AQUI</text>
+              <text x="542" y="40" font-family="Geist Mono, monospace" font-size="14" fill="#FF7A45">VOCÊ VÊ NO TIKTOK E COMPRA</text>
               <path d="M740 254V290" stroke="#FF7A45" stroke-dasharray="3 4" fill="none"/>
               <circle cx="740" cy="246" r="7" fill="#FF7A45"/>
               <text x="740" y="316" text-anchor="middle" font-family="Geist Mono, monospace" font-size="14" fill="#FF7A45">VOCÊ VENDE AQUI (PÂNICO)</text>
@@ -413,18 +526,18 @@ ol.steps{list-style:none;margin:0;padding:0}
         <div class="grid-auto">
           <div class="panel" style="background:var(--surface-2)">
             <svg class="ic down"><use href="#i-up"/></svg>
-            <h3>Você entra quando já subiu</h3>
-            <p>Quando o token aparece no seu feed, quem estava posicionado já está realizando lucro. Você vira a liquidez de saída de alguém.</p>
+            <h3>Você descobre tarde</h3>
+            <p>Quando a memecoin aparece no TikTok ou no X, quem estava posicionado já está vendendo. Você vira a liquidez de saída de alguém.</p>
           </div>
           <div class="panel" style="background:var(--surface-2)">
             <svg class="ic down"><use href="#i-down"/></svg>
             <h3>Você sai no pior momento</h3>
-            <p>Sem stop definido, cada candle vermelho vira pânico. A decisão deixa de ser técnica e passa a ser emocional.</p>
+            <p>Memecoin cai 30% em minutos. Sem stop definido, cada candle vermelho vira pânico e a decisão passa a ser emocional.</p>
           </div>
           <div class="panel" style="background:var(--surface-2)">
-            <svg class="ic down"><use href="#i-eyeoff"/></svg>
-            <h3>Você opera no escuro</h3>
-            <p>Sem plano, sem gestão de risco e sem ninguém para trocar ideia. Cada erro sai do seu bolso, e você nem sabe por quê.</p>
+            <svg class="ic down"><use href="#i-alert"/></svg>
+            <h3>Você cai em golpe</h3>
+            <p>Liquidez que não está travada, contrato duvidoso, carteiras concentradas. Sem filtro, um rug pull leva tudo em minutos.</p>
           </div>
         </div>
       </div>
@@ -436,14 +549,14 @@ ol.steps{list-style:none;margin:0;padding:0}
           <div>
             <span class="eyebrow">A virada</span>
             <h2 class="h2">Faça parte do <span class="up">método.</span></h2>
-            <p class="lead">Dentro do grupo, o hype vira dado: volume, rompimento, fluxo e gestão de risco. Você para de reagir ao mercado e passa a se antecipar a ele, com um plano claro antes de cada clique.</p>
+            <p class="lead">Dentro do grupo, o hype vira dado: volume, rompimento, fluxo de carteiras e gestão de risco. Você para de reagir ao mercado e passa a se antecipar a ele, com um plano claro antes de cada clique.</p>
             <div class="vs">
-              <div><span class="was">ANTES</span>Comprar porque todo mundo está comprando</div>
-              <div><span>AGORA</span>Entrar no nível certo, com alvo e stop definidos</div>
+              <div><span class="was">ANTES</span>Comprar a memecoin porque todo mundo está falando dela</div>
+              <div><span>AGORA</span>Entrar no nível certo, com alvo, stop e filtro anti-golpe</div>
             </div>
           </div>
           <div>
-            <svg class="radar" viewBox="0 0 400 400" role="img" aria-label="Radar escaneando o mercado em busca de rompimentos, volume e liquidez">
+            <svg class="radar" viewBox="0 0 400 400" role="img" aria-label="Radar escaneando o mercado global em busca de rompimentos, volume e sinais de golpe">
               <circle cx="200" cy="200" r="180" fill="#0A0B0E" stroke="#1C2026"/>
               <circle cx="200" cy="200" r="120" fill="none" stroke="#1C2026"/>
               <circle cx="200" cy="200" r="60" fill="none" stroke="#1C2026"/>
@@ -457,9 +570,9 @@ ol.steps{list-style:none;margin:0;padding:0}
               <circle class="blink" cx="118" cy="262" r="5" fill="#E9EDF1"/>
               <text x="70" y="288" font-family="Geist Mono, monospace" font-size="11" fill="#AEB6BF">VOLUME ↑</text>
               <circle class="blink" cx="292" cy="284" r="5" fill="#E9EDF1"/>
-              <text x="262" y="310" font-family="Geist Mono, monospace" font-size="11" fill="#AEB6BF">LIQUIDEZ</text>
+              <text x="262" y="310" font-family="Geist Mono, monospace" font-size="11" fill="#AEB6BF">BALEIAS</text>
               <circle class="blink" cx="134" cy="128" r="5" fill="#FF7A45"/>
-              <text x="74" y="114" font-family="Geist Mono, monospace" font-size="11" fill="#FF7A45">EVITAR</text>
+              <text x="62" y="114" font-family="Geist Mono, monospace" font-size="11" fill="#FF7A45">RUG PULL</text>
               <circle cx="200" cy="200" r="5" fill="#C6FF3D"/>
             </svg>
           </div>
@@ -469,9 +582,9 @@ ol.steps{list-style:none;margin:0;padding:0}
           <h3 class="sub">O que você recebe dentro do grupo</h3>
           <div class="grid-auto">
             <div class="panel hover"><svg class="ic up"><use href="#i-bell"/></svg><h4>Alertas em tempo real</h4><p>Par, zona de entrada, alvos e stop. Direto no seu Telegram, com notificação no celular.</p></div>
-            <div class="panel hover"><svg class="ic up"><use href="#i-pulse"/></svg><h4>Leitura diária do mercado</h4><p>Todo dia: o que observar, onde estão os níveis importantes e o que evitar.</p></div>
-            <div class="panel hover"><svg class="ic up"><use href="#i-shield"/></svg><h4>Gestão de risco em cada operação</h4><p>Tamanho de posição e stop em todo alerta. Proteger o capital vem antes de buscar lucro.</p></div>
-            <div class="panel hover"><svg class="ic up"><use href="#i-target"/></svg><h4>Radar de tendências na FOMO</h4><p>Os ativos ganhando tração antes de virarem assunto, e os que é melhor deixar passar.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-globe"/></svg><h4>Radar global de memecoins</h4><p>O que está ganhando volume nos EUA e na Ásia, antes de virar assunto no Brasil.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-shield"/></svg><h4>Filtro anti-golpe</h4><p>Checagem de liquidez travada, contrato e concentração de carteiras antes de qualquer alerta.</p></div>
+            <div class="panel hover"><svg class="ic up"><use href="#i-scale"/></svg><h4>Gestão de risco em cada operação</h4><p>Tamanho de posição e stop em todo alerta. Proteger o capital vem antes de buscar lucro.</p></div>
             <div class="panel hover"><svg class="ic up"><use href="#i-video"/></svg><h4>Análises ao vivo</h4><p>Gráfico aberto e raciocínio explicado. Você aprende a ler o mercado enquanto acompanha.</p></div>
             <div class="panel hover"><svg class="ic up"><use href="#i-users"/></svg><h4>Comunidade ativa</h4><p>Traders trocando setups, dúvidas e aprendizados. Você para de operar sozinho.</p></div>
           </div>
@@ -487,29 +600,30 @@ ol.steps{list-style:none;margin:0;padding:0}
               <div class="screen">
                 <div class="chan">
                   <span class="avatar">FC</span>
-                  <div><b>FOMO/CLUB</b><span>[12.000] membros · [5.000] online</span></div>
+                  <div><b>FOMO/CLUB</b><span>[12.000] membros · [5.567] online</span></div>
                 </div>
                 <div class="msgs">
-                  <div class="msg">Bom dia, traders. Leitura do dia fixada no topo. Atenção à zona de 178 em SOL.</div>
+                  <div class="msg">Bom dia, traders. Radar global fixado: volume de memecoins subindo na Ásia desde as 3h.</div>
                   <div class="msg alert">
-                    <div class="alert-top"><span class="badge">ALERTA · LONG</span><span>09:41</span></div>
-                    <span class="alert-pair">SOL / USDT</span>
+                    <div class="alert-top"><span class="badge">ALERTA · LONG · MEME</span><span>09:41</span></div>
+                    <span class="alert-pair">WIF / USDT</span>
                     <svg viewBox="0 0 240 60" width="100%" height="54" aria-hidden="true" style="display:block">
                       <path d="M0 22H240" stroke="#C6FF3D" stroke-opacity=".35" stroke-dasharray="3 3" fill="none"/>
                       <path d="M0 46H240" stroke="#FF7A45" stroke-opacity=".45" stroke-dasharray="3 3" fill="none"/>
                       <path d="M0 50 L20 46 L40 48 L60 42 L80 44 L100 40 L120 38 L140 41 L160 36 L180 30 L200 26 L220 20 L240 14" fill="none" stroke="#C6FF3D" stroke-width="2" stroke-linejoin="round"/>
                     </svg>
                     <dl class="kv" style="margin:0">
-                      <dt>Entrada</dt><dd>178,20 – 179,10</dd>
-                      <dt>Alvo 1</dt><dd class="up">184,50</dd>
-                      <dt>Alvo 2</dt><dd class="up">189,80</dd>
-                      <dt>Stop</dt><dd class="down">174,90</dd>
-                      <dt>Risco</dt><dd>1% da banca</dd>
+                      <dt>Entrada</dt><dd>1,82 – 1,85</dd>
+                      <dt>Alvo 1</dt><dd class="up">1,96</dd>
+                      <dt>Alvo 2</dt><dd class="up">2,08</dd>
+                      <dt>Stop</dt><dd class="down">1,74</dd>
+                      <dt>Risco</dt><dd>0,5% da banca</dd>
+                      <dt>Filtro</dt><dd class="up">liquidez ok</dd>
                     </dl>
                   </div>
                   <div class="msg">Alvo 1 atingido. Stop movido para a entrada: operação protegida.</div>
                 </div>
-                <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">ENTRAR NO GRUPO</a>
+                <a class="btn" href="#teste" data-quiz>FAZER O TESTE</a>
               </div>
             </div>
           </div>
@@ -521,7 +635,7 @@ ol.steps{list-style:none;margin:0;padding:0}
               <li><span>01</span><div><b>Par e direção</b><p>Qual ativo e se a leitura é de alta ou de baixa.</p></div></li>
               <li><span>02</span><div><b>Zona de entrada</b><p>Uma faixa de preço, não um “compra agora”. Você entra sem correr atrás.</p></div></li>
               <li><span>03</span><div><b>Alvos parciais</b><p>Onde realizar lucro, em etapas, antes da euforia virar queda.</p></div></li>
-              <li><span class="down">04</span><div><b>Stop obrigatório e risco sugerido</b><p>O ponto de saída se a leitura falhar e quanto da banca expor. Sempre.</p></div></li>
+              <li><span class="down">04</span><div><b>Stop, risco e filtro</b><p>O ponto de saída se a leitura falhar, quanto da banca expor e a checagem anti-golpe. Sempre.</p></div></li>
             </ol>
             <p class="note" style="font-size:12px">Exemplo ilustrativo da estrutura. Não é recomendação de investimento.</p>
           </div>
@@ -533,58 +647,48 @@ ol.steps{list-style:none;margin:0;padding:0}
       <div class="wrap">
         <div class="head">
           <span class="eyebrow">Como entrar</span>
-          <h2 class="h2">Três passos. Menos de um minuto.</h2>
+          <h2 class="h2">Três passos. Menos de dois minutos.</h2>
         </div>
         <div class="grid-auto">
-          <div class="panel" style="padding:32px;gap:14px"><span class="num">1</span><h3>Clique no botão</h3><p>Você é levado direto para o checkout de pagamento do grupo.</p></div>
-          <div class="panel" style="padding:32px;gap:14px"><span class="num">2</span><h3>Realize o pagamento</h3><p>Realize o pagamento do valor promocional.</p></div>
-          <div class="panel" style="padding:32px;gap:14px"><span class="num">3</span><h3>Ative as notificações</h3><p>Fixe o grupo e ligue o som. O próximo movimento não espera ninguém.</p></div>
+          <div class="panel" style="padding:32px;gap:14px"><span class="num">1</span><h3>Faça o teste</h3><p>Sete perguntas sobre você, seu momento e seu jeito de lidar com risco. Leva 60 segundos.</p></div>
+          <div class="panel" style="padding:32px;gap:14px"><span class="num">2</span><h3>Receba seu perfil</h3><p>Você descobre se está apto, qual é o seu perfil de trader e onde precisa de atenção.</p></div>
+           <div class="panel" style="padding:32px;gap:14px"><span class="num">3</span><h3>Realize o pagamento</h3><p>Realize o pagamento do valor promocional. Fixe o grupo e ligue o som. O próximo movimento não espera ninguém.</p>
         </div>
-        <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener" style="align-self:flex-start">
-          <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Quero entrar no grupo
-        </a>
+        <div class="cta-row">
+          <a class="btn" href="#teste" data-quiz>Ver se estou apto para operar<svg class="ic" style="width:18px;height:18px"><use href="#i-arrow"/></svg></a>
+          <span class="btn-note">60 segundos · gratuito</span>
+        </div>
       </div>
     </section>
 
-    <section class="section band">
+    <section id="depoimentos" class="section band">
       <div class="wrap">
         <div class="mk-head">
           <div class="head">
             <span class="eyebrow">Quem já está dentro</span>
             <h2 class="h2">Contado por quem opera com a gente.</h2>
           </div>
+          <span class="fict">Depoimentos e avaliações fictícios · projeto acadêmico</span>
         </div>
 
         <div class="vstrip">
-          <div class="vitem">
-            <b>4,9<span class="up">★</span></b>
-            <span>nota média dos membros</span>
-          </div>
-          <div class="vitem">
-            <b>[12.754]</b>
-            <span>traders no grupo</span>
-          </div>
-          <div class="vitem">
-            <b><span class="dot"></span>[5.329]</b>
-            <span>online agora</span>
-          </div>
-          <div class="vitem">
-            <b>100%</b>
-            <span>dos alertas com stop definido</span>
-          </div>
+          <div class="vitem"><b>4,9<span class="up">★</span></b><span>nota média dos membros</span></div>
+          <div class="vitem"><b>[12.000]</b><span>traders no grupo</span></div>
+          <div class="vitem"><b><span class="dot"></span>[5.240]</b><span>online agora</span></div>
+          <div class="vitem"><b>100%</b><span>dos alertas com stop definido</span></div>
         </div>
 
         <div class="grid-auto">
           <figure class="panel proof">
             <div class="proof-top"><span class="stars" aria-label="5 de 5 estrelas">★★★★★</span><span class="ver"><svg class="ic"><use href="#i-check"/></svg>Membro verificado</span></div>
-            <div class="bubble"><span class="mono">#alertas · 14:22</span>Stop respeitado. Saí no zero a zero numa operação que antes eu teria segurado até o fundo.</div>
-            <blockquote>“Eu era o cara que comprava depois que o token já tinha subido 80%. Hoje só entro na zona do alerta, com stop marcado. Parei de perder dinheiro por impulso.”</blockquote>
+            <div class="bubble"><span class="mono">#alertas · 14:22</span>Stop respeitado na memecoin. Saí no zero a zero numa operação que antes eu teria segurado até o fundo.</div>
+            <blockquote>“Eu era o cara que via a moeda no TikTok e comprava depois de ela já ter subido 80%. Hoje só entro na zona do alerta, com stop marcado. Parei de perder dinheiro por impulso.”</blockquote>
             <figcaption><i>RM</i><span><b>Rafael M.</b><span>São Paulo · membro desde 03/2025</span></span></figcaption>
           </figure>
           <figure class="panel proof">
             <div class="proof-top"><span class="stars" aria-label="5 de 5 estrelas">★★★★★</span><span class="ver"><svg class="ic"><use href="#i-check"/></svg>Membro verificado</span></div>
-            <div class="bubble"><span class="mono">#iniciantes · 09:05</span>Primeira semana seguindo o plano à risca. Nenhuma operação por impulso.</div>
-            <blockquote>“Nunca tinha operado. As análises ao vivo me ensinaram a ler o gráfico, e a regra de arriscar 1% por operação me deu segurança para começar pequeno.”</blockquote>
+            <div class="bubble"><span class="mono">#iniciantes · 09:05</span>O filtro barrou um token que eu ia comprar. Dois dias depois, o criador sumiu com a liquidez.</div>
+            <blockquote>“Nunca tinha operado. As análises ao vivo me ensinaram a ler o gráfico, e a regra de arriscar pouco por operação me deu segurança para começar pequeno.”</blockquote>
             <figcaption><i>CT</i><span><b>Camila T.</b><span>Belo Horizonte · membro desde 08/2025</span></span></figcaption>
           </figure>
           <figure class="panel proof">
@@ -594,26 +698,48 @@ ol.steps{list-style:none;margin:0;padding:0}
             <figcaption><i>DA</i><span><b>Diego A.</b><span>Curitiba · membro desde 01/2026</span></span></figcaption>
           </figure>
         </div>
+      </div>
+    </section>
 
-        <div class="cta-row">
-          <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener"><svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Quero resultados assim</a>
-          <span class="mono" style="font-size:13px;color:var(--muted-2)">Junte-se a [12.000] traders</span>
+    <section id="teste" class="section">
+      <div class="wrap">
+        <div class="qcall">
+          <div>
+            <span class="eyebrow">Antes de entrar</span>
+            <h2 class="h2">Você está apto para operar memecoins?</h2>
+            <p class="lead">Nem todo mundo deveria entrar agora, e a gente prefere ser sincero sobre isso. O teste mostra seu perfil de trader, o que joga a seu favor e o que precisa de atenção.</p>
+            <div class="qmeta"><span>7 perguntas</span><span>60 segundos</span><span>Resultado na hora</span></div>
+            <div class="cta-row">
+              <a class="btn btn-lg" href="#teste" data-quiz>Começar o teste<svg class="ic"><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+          <div>
+            <span class="note" style="font-size:12px">O TESTE AVALIA</span>
+            <ul class="qlist">
+              <li><span>01</span>O que você realmente busca no mercado</li>
+              <li><span>02</span>Como você reage quando o preço despenca</li>
+              <li><span>03</span>Quanto tempo você tem por dia</li>
+              <li><span>04</span>De onde viria o dinheiro para operar</li>
+              <li><span>05</span>Seu compromisso com o stop</li>
+            </ul>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="faq" class="section">
+    <section id="faq" class="section band">
       <div class="wrap" style="max-width:900px;gap:40px">
         <div class="head">
           <span class="eyebrow">Dúvidas</span>
           <h2 class="h2">Perguntas frequentes</h2>
         </div>
         <div class="faq-list">
-          <details class="faq" open><summary>O grupo é pago?</summary><p>Sim, para evitar BOTs e pessoas que não queiram mudar de vida. Só entra no grupo quem tem vontade de vencer e mudar a sua realidade.</p></details>
-          <details class="faq"><summary>Preciso ter experiência com trade?</summary><p>Não. Os alertas vêm com entrada, alvo e stop, e as análises ao vivo mostram o raciocínio por trás de cada operação. Você aprende operando com contexto.</p></details>
-          <details class="faq"><summary>Quanto preciso para começar?</summary><p>Comece com um valor que você aceita perder enquanto aprende. Todo alerta traz o risco sugerido para você dimensionar a posição de acordo com a sua banca.</p></details>
-          <details class="faq"><summary>Os alertas garantem lucro?</summary><p>Não, e desconfie de quem promete isso. Trade de cripto envolve risco alto. O que entregamos é método, contexto e gestão de risco para você tomar decisões melhores.</p></details>
-          <details class="faq"><summary>Como eu saio do grupo?</summary><p>A qualquer momento, com um toque no Telegram. Sem fidelidade e sem burocracia.</p></details>
+          <details class="faq" open><summary>O que são memecoins?</summary><p>São criptomoedas que nascem de memes, comunidades e cultura da internet. Não têm um produto por trás, então o preço vem de atenção e volume. Por isso podem subir muito rápido e cair na mesma velocidade.</p></details>
+          <details class="faq"><summary>Memecoin não é golpe?</summary><p>Muitas são, e é exatamente por isso que existe o filtro anti-golpe. Antes de qualquer alerta, checamos se a liquidez está travada, quem controla o contrato e se poucas carteiras concentram o token. O que não passa no filtro não vira alerta.</p></details>
+          <details class="faq"><summary>O grupo é pago?</summary><p>[Defina aqui: gratuito, ou o valor e o que está incluso.]</p></details>
+          <details class="faq"><summary>Preciso ter experiência com trade?</summary><p>Não. Os alertas vêm com entrada, alvo e stop, e as análises ao vivo mostram o raciocínio por trás de cada operação. O teste mostra o seu ponto de partida.</p></details>
+          <details class="faq"><summary>Quanto preciso para começar?</summary><p>Comece com um valor que você aceita perder enquanto aprende. Em memecoins, todo alerta traz um risco sugerido menor do que em moedas grandes, para você dimensionar a posição de acordo com a sua banca.</p></details>
+          <details class="faq"><summary>Os alertas garantem lucro?</summary><p>Não, e desconfie de quem promete isso. Memecoins estão entre os ativos mais arriscados do mercado. O que entregamos é método, contexto, filtro e gestão de risco para você tomar decisões melhores.</p></details>
         </div>
       </div>
     </section>
@@ -625,13 +751,11 @@ ol.steps{list-style:none;margin:0;padding:0}
             <path id="big-area" fill="#C6FF3D" fill-opacity=".06"/>
             <path id="big-line" fill="none" stroke="#C6FF3D" stroke-opacity=".5" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
           </svg>
-          <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px"><span class="dot"></span>O mercado está aberto agora</span>
-          <h2 class="h1">O próximo movimento já está se formando.</h2>
-          <p class="lead" style="max-width:620px">Quem chega primeiro decide com calma. Quem chega depois decide no impulso. Escolha de que lado você quer estar.</p>
-          <a class="btn btn-lg" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener">
-            <svg class="ic"><use href="https://pay.cakto.com.br/38hwb7c_1273897"/></svg>Entrar no grupo do Telegram
-          </a>
-          <span class="mono" style="font-size:13px;color:var(--muted-2)">Acesso imediato · Saia quando quiser</span>
+          <span class="eyebrow" style="display:inline-flex;align-items:center;gap:10px"><span class="dot"></span>A janela está aberta agora</span>
+          <h2 class="h1">Daqui a um ano, todo mundo vai falar de memecoin. Você vai estar onde?</h2>
+          <p class="lead" style="max-width:640px">Quem chega cedo aprende com calma. Quem chega quando virou moda aprende no prejuízo. Faça o teste e descubra se este é o seu momento.</p>
+          <a class="btn btn-lg" href="#teste" data-quiz>Ver se estou apto para operar<svg class="ic"><use href="#i-arrow"/></svg></a>
+          <span class="mono" style="font-size:13px;color:var(--muted-2)">60 segundos · resultado na hora · acesso ao grupo logo depois</span>
         </div>
       </div>
     </section>
@@ -643,77 +767,88 @@ ol.steps{list-style:none;margin:0;padding:0}
         <span class="brand-name" style="font-size:15px;color:var(--fg)">FOMO<i>/</i>CLUB</span>
         <span>© 2026 FOMO/CLUB</span>
       </div>
-      <p>Aviso de risco: criptoativos são altamente voláteis e você pode perder todo o capital investido. O conteúdo do grupo tem caráter educacional e informativo e não constitui recomendação de investimento. Resultados passados não garantem resultados futuros. Opere apenas com valores que você pode perder. [Se aplicável: este grupo não possui afiliação oficial com a plataforma FOMO.]</p>
+      <p>Aviso de risco: criptoativos, e memecoins em especial, são extremamente voláteis e você pode perder todo o capital investido. Memecoins não têm valor fundamental e podem ir a zero. O conteúdo do grupo tem caráter educacional e informativo e não constitui recomendação de investimento. Resultados passados não garantem resultados futuros. Proibido para menores de 18 anos. Opere apenas com valores que você pode perder. [Se aplicável: este grupo não possui afiliação oficial com a plataforma FOMO.]</p>
       <p data-feed>Simulação visual · não representa cotação real</p>
     </div>
   </footer>
 </div>
 
 <div class="mbar" id="mbar">
-  <a class="btn" data-tg href="https://pay.cakto.com.br/38hwb7c_1273897" target="_blank" rel="noopener"><svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram</a>
+  <a class="btn" href="#teste" data-quiz><svg class="ic"><use href="#i-check"/></svg>Ver se estou apto (60s)</a>
+</div>
+
+<div class="qz" id="qz" role="dialog" aria-modal="true" aria-labelledby="qz-title" hidden>
+  <div class="qz-box" id="qz-box"></div>
 </div>
 
 <script>
 (function () {
   'use strict';
 
-  /* ===== CONFIGURAÇÃO — edite aqui ===== */
+  /* ===== CONFIGURAÇÃO: edite aqui ===== */
   var CONFIG = {
     telegram: 'https://pay.cakto.com.br/38hwb7c_1273897', // link de convite do seu grupo
+    heroSymbol: 'PEPE',                 // moeda do gráfico principal
     liveData: true                      // usa cotações reais da Binance quando o navegador permitir
   };
-  /* ===================================== */
-
-  document.querySelectorAll('[data-tg]').forEach(function (a) { a.href = CONFIG.telegram; });
+  /* ==================================== */
 
   var UP = '#C6FF3D', DOWN = '#FF7A45';
   var ASSETS = [
     { sym: 'BTC', name: 'Bitcoin', p: 103800, vol: .0012 },
     { sym: 'ETH', name: 'Ethereum', p: 3820, vol: .0016 },
     { sym: 'SOL', name: 'Solana', p: 182.4, vol: .0022 },
-    { sym: 'BNB', name: 'BNB', p: 712, vol: .0014 },
-    { sym: 'XRP', name: 'XRP', p: 2.41, vol: .002 },
-    { sym: 'DOGE', name: 'Dogecoin', p: .218, vol: .0028 },
-    { sym: 'AVAX', name: 'Avalanche', p: 31.6, vol: .0024 },
-    { sym: 'LINK', name: 'Chainlink', p: 18.9, vol: .0022 }
+    { sym: 'DOGE', name: 'Dogecoin', p: .218, vol: .003, meme: true },
+    { sym: 'PEPE', name: 'Pepe', p: .00001123, vol: .0045, meme: true },
+    { sym: 'WIF', name: 'dogwifhat', p: 1.84, vol: .0042, meme: true },
+    { sym: 'BONK', name: 'Bonk', p: .0000235, vol: .0045, meme: true },
+    { sym: 'SHIB', name: 'Shiba Inu', p: .0000142, vol: .003, meme: true },
+    { sym: 'FLOKI', name: 'Floki', p: .000118, vol: .0042, meme: true }
   ];
+  var CARD_SYMS = ['BTC', 'SOL', 'DOGE', 'WIF'];
+  var HERO = Math.max(0, ASSETS.findIndex(function (a) { return a.sym === CONFIG.heroSymbol; }));
   var S = { live: false, candles: [], assets: [], big: [] };
   var n = 0;
   var $ = function (id) { return document.getElementById(id); };
   var rnd = function () { return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5; };
 
+  document.querySelectorAll('[data-tg]').forEach(function (a) { a.href = CONFIG.telegram; });
+  $('hero-pair').textContent = ASSETS[HERO].sym + ' / USDT';
+
   function fmt(v) {
     if (v >= 1000) return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (v >= 1) return v.toFixed(2);
-    return v.toFixed(4);
+    if (v >= .01) return v.toFixed(4);
+    return v.toPrecision(4);
   }
   function signed(p) { return (p >= 0 ? '+' : '') + p.toFixed(2) + '%'; }
 
   function seed() {
-    var cs = [], p = ASSETS[0].p;
+    var h = ASSETS[HERO], hv = h.meme ? .006 : .0028;
+    var cs = [], p = h.p;
     for (var i = 0; i < 56; i++) {
-      var o = p, c = o * (1 + rnd() * .0028 + .0002);
-      cs.push({ t: i, o: o, c: c, h: Math.max(o, c) * (1 + Math.random() * .0012), l: Math.min(o, c) * (1 - Math.random() * .0012) });
+      var o = p, c = o * (1 + rnd() * hv + hv * .07);
+      cs.push({ t: i, o: o, c: c, h: Math.max(o, c) * (1 + Math.random() * hv * .45), l: Math.min(o, c) * (1 - Math.random() * hv * .45) });
       p = c;
     }
     S.candles = cs;
     S.assets = ASSETS.map(function (a, idx) {
       var s = [];
-      if (idx === 0) s = cs.slice(-48).map(function (c) { return c.c; });
+      if (idx === HERO) s = cs.slice(-48).map(function (c) { return c.c; });
       else { var v = a.p; for (var k = 0; k < 48; k++) { v *= 1 + rnd() * a.vol * 2 + .0001; s.push(v); } }
-      return { sym: a.sym, name: a.name, vol: a.vol, series: s, ref: s[0], open24: null };
+      return { sym: a.sym, name: a.name, meme: !!a.meme, vol: a.vol, series: s, ref: s[0], open24: null };
     });
   }
 
   function simTick() {
     n++;
     var cs = S.candles, last = cs[cs.length - 1];
-    var v = last.c * (1 + rnd() * .0011 + .00004);
+    var v = last.c * (1 + rnd() * (ASSETS[HERO].meme ? .0025 : .0011) + .00006);
     last.c = v; last.h = Math.max(last.h, v); last.l = Math.min(last.l, v);
     if (n % 7 === 0) { cs.shift(); cs.push({ t: last.t + 1, o: v, h: v, l: v, c: v }); }
     S.assets.forEach(function (a, i) {
       var s = a.series;
-      s.push(i === 0 ? v : s[s.length - 1] * (1 + rnd() * a.vol));
+      s.push(i === HERO ? v : s[s.length - 1] * (1 + rnd() * a.vol));
       s.shift();
     });
   }
@@ -727,27 +862,29 @@ ol.steps{list-style:none;margin:0;padding:0}
     return { line: line, area: line + 'L' + W + ' ' + H + 'L0 ' + H + 'Z' };
   }
 
-  /* ----- montar ticker e cards ----- */
+  /* ----- ticker e cards ----- */
   var tRefs = [], cRefs = [];
   function build() {
-    var tk = $('ticker'); tk.innerHTML = '';
+    var tk = $('ticker'); tk.innerHTML = ''; tRefs = [];
     for (var r = 0; r < 2; r++) {
       S.assets.forEach(function (a, i) {
         var el = document.createElement('span');
         el.className = 't-item';
         if (r === 1) el.setAttribute('aria-hidden', 'true');
-        el.innerHTML = '<b>' + a.sym + '/USDT</b><span class="t-p"></span><span class="t-c"></span>';
+        el.innerHTML = (a.meme ? '<span class="t-meme">MEME</span>' : '') + '<b>' + a.sym + '/USDT</b><span class="t-p"></span><span class="t-c"></span>';
         tk.appendChild(el);
         tRefs.push({ i: i, p: el.querySelector('.t-p'), c: el.querySelector('.t-c') });
       });
     }
-    var cards = $('cards'); cards.innerHTML = '';
-    S.assets.slice(0, 4).forEach(function (a, i) {
-      var el = document.createElement('div');
+    var cards = $('cards'); cards.innerHTML = ''; cRefs = [];
+    CARD_SYMS.forEach(function (sym) {
+      var i = S.assets.findIndex(function (a) { return a.sym === sym; });
+      if (i < 0) return;
+      var a = S.assets[i], el = document.createElement('div');
       el.className = 'mcard hover';
       el.innerHTML =
         '<div class="mc-top"><div class="mc-id"><span class="mc-sym">' + a.sym + '</span>' +
-        '<div class="mc-name"><b>' + a.name + '</b><span>' + a.sym + '/USDT</span></div></div>' +
+        '<div class="mc-name"><b>' + a.name + (a.meme ? ' <span class="t-meme">MEME</span>' : '') + '</b><span>' + a.sym + '/USDT</span></div></div>' +
         '<span class="mc-pct"></span></div>' +
         '<span class="mc-price"></span>' +
         '<svg viewBox="0 0 200 56" preserveAspectRatio="none" aria-hidden="true">' +
@@ -794,10 +931,10 @@ ol.steps{list-style:none;margin:0;padding:0}
     tag.style.top = (ly / H * 100).toFixed(2) + '%';
     tag.textContent = fmt(lastC);
     $('hero-price').textContent = fmt(lastC);
-    var btc = S.assets[0];
-    var ref = (S.live && btc.open24) ? btc.open24 : cs[0].o;
+    var ha = S.assets[HERO];
+    var ref = (S.live && ha.open24) ? ha.open24 : cs[0].o;
     var pct = (lastC / ref - 1) * 100, pe = $('hero-pct');
-    pe.textContent = signed(pct) + (S.live && btc.open24 ? ' 24h' : '');
+    pe.textContent = signed(pct) + (S.live && ha.open24 ? ' 24h' : '');
     pe.style.color = pct >= 0 ? UP : DOWN;
     $('hero-hi').textContent = fmt(hi);
     $('hero-lo').textContent = fmt(lo);
@@ -827,9 +964,15 @@ ol.steps{list-style:none;margin:0;padding:0}
     $('big-area').setAttribute('d', sp.area);
   }
 
+  var clockEls = Array.prototype.map.call(document.querySelectorAll('[data-tz]'), function (el) {
+    var f;
+    try { f = new Intl.DateTimeFormat('pt-BR', { timeZone: el.getAttribute('data-tz'), hour: '2-digit', minute: '2-digit', second: '2-digit' }); } catch (e) { f = null; }
+    return { b: el.querySelector('b'), f: f };
+  });
   function renderClock() {
     var d = new Date(), p = function (x) { return String(x).padStart(2, '0'); };
     $('clock').textContent = p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+    clockEls.forEach(function (c) { if (c.f) c.b.textContent = c.f.format(d); });
   }
 
   function render() { renderHero(); renderAssets(); renderClock(); }
@@ -849,11 +992,12 @@ ol.steps{list-style:none;margin:0;padding:0}
   function goLive() {
     if (!CONFIG.liveData || !('WebSocket' in window) || !window.fetch) return;
     var API = 'https://data-api.binance.vision/api/v3/klines';
-    var reqs = [getJSON(API + '?symbol=BTCUSDT&interval=1m&limit=56')].concat(
+    var hs = S.assets[HERO].sym;
+    var reqs = [getJSON(API + '?symbol=' + hs + 'USDT&interval=1m&limit=56')].concat(
       S.assets.map(function (a) { return getJSON(API + '?symbol=' + a.sym + 'USDT&interval=15m&limit=48'); }));
     var ws;
     timeout(Promise.all(reqs), 6000).then(function (res) {
-      var streams = ['btcusdt@kline_1m'].concat(S.assets.map(function (a) { return a.sym.toLowerCase() + 'usdt@miniTicker'; })).join('/');
+      var streams = [hs.toLowerCase() + 'usdt@kline_1m'].concat(S.assets.map(function (a) { return a.sym.toLowerCase() + 'usdt@miniTicker'; })).join('/');
       ws = new WebSocket('wss://data-stream.binance.vision/stream?streams=' + streams);
       return timeout(new Promise(function (ok, fail) { ws.onopen = ok; ws.onerror = fail; }), 6000).then(function () { return res; });
     }).then(function (res) {
@@ -866,7 +1010,7 @@ ol.steps{list-style:none;margin:0;padding:0}
           var k = d.k, c = { t: k.t, o: +k.o, h: +k.h, l: +k.l, c: +k.c }, cs = S.candles, last = cs[cs.length - 1];
           if (last && last.t === c.t) cs[cs.length - 1] = c;
           else { cs.push(c); if (cs.length > 56) cs.shift(); }
-          var b = S.assets[0].series; b[b.length - 1] = c.c;
+          var b = S.assets[HERO].series; b[b.length - 1] = c.c;
         } else if (d.e === '24hrMiniTicker') {
           var a = S.assets.find(function (x) { return x.sym + 'USDT' === d.s; });
           if (a) { a.series[a.series.length - 1] = +d.c; a.open24 = +d.o; }
@@ -880,9 +1024,181 @@ ol.steps{list-style:none;margin:0;padding:0}
       ws.onclose = drop; ws.onerror = drop;
     }).catch(function () {
       try { if (ws) ws.close(); } catch (e) {}
-      /* sem acesso à Binance: continua na simulação */
     });
   }
+
+  /* ===== TESTE "VER SE ESTOU APTO" ===== */
+  var QUESTIONS = [
+    { id: 'age', q: 'Antes de tudo: você tem 18 anos ou mais?', sub: 'Operar criptomoedas exige maioridade.',
+      opts: [['Sim, tenho 18 anos ou mais', 'ok'], ['Ainda não', 'minor']] },
+    { id: 'feel', q: 'Qual dessas frases parece mais com você?',
+      opts: [['“Vi uma memecoin explodir e pensei: eu devia ter entrado.”', 'miss'], ['“Já entrei atrasado e saí no prejuízo.”', 'late'], ['“Nunca operei, mas sinto que estou ficando para trás.”', 'new'], ['“Já opero e quero um método mais consistente.”', 'pro']] },
+    { id: 'why', q: 'Seja sincero: o que você quer de verdade com isso?', sub: 'Ninguém além de você vê essa resposta.',
+      opts: [['Uma renda extra que não dependa só do meu salário', 'income'], ['Mudar de vida', 'wealth'], ['Ter mais liberdade financeira', 'freedom'], ['Entender um mercado que está mudando o mundo', 'learn']] },
+    { id: 'time', q: 'Quanto tempo por dia você consegue dedicar?',
+      opts: [['Até 15 minutos', 'short'], ['De 30 minutos a 1 hora', 'mid'], ['Mais de 1 hora', 'long'], ['Só nos fins de semana', 'weekend']] },
+    { id: 'drop', q: 'Uma memecoin que você comprou cai 30% em uma hora. O que você faz?', sub: 'Isso acontece com frequência nesse mercado.',
+      opts: [['Vendo tudo no desespero', 'panic'], ['Seguro e torço para voltar', 'hold'], ['Eu já teria saído antes, no stop', 'stop'], ['Não sei, nunca passei por isso', 'unknown']] },
+    { id: 'money', q: 'De onde viria o dinheiro para operar?', sub: 'Essa é a pergunta mais importante do teste.',
+      opts: [['De uma reserva extra que não compromete minhas contas', 'spare'], ['De uma parte dos meus investimentos', 'invest'], ['Do dinheiro que uso para pagar as contas', 'bills'], ['De empréstimo ou cartão de crédito', 'debt']] },
+    { id: 'commit', q: 'Se entrar hoje, você se compromete a respeitar o stop em toda operação?',
+      opts: [['Sim, sem exceção', 'yes'], ['Vou tentar', 'try']] }
+  ];
+
+  var PROFILES = {
+    stop: { name: 'Estrategista', text: 'Você já entende que proteger o capital vem primeiro. É o perfil que mais aproveita os alertas, porque executa o plano sem hesitar.' },
+    unknown: { name: 'Iniciante com potencial', text: 'Você ainda não foi testado pelo mercado, e isso é uma vantagem: chega sem vícios. Seguindo o método desde o primeiro dia, você constrói a disciplina certa.' },
+    hold: { name: 'Persistente', text: 'Você tem convicção, o que é ótimo. O ajuste é transformar essa convicção em regra: com stop definido, a persistência deixa de virar prejuízo.' },
+    panic: { name: 'Caçador de oportunidades', text: 'Você sente o mercado com intensidade. Com alertas que já trazem o stop, a decisão sai da emoção e vai para o plano.' }
+  };
+  var GOAL = {
+    income: 'Para renda extra, o foco é consistência: poucas operações bem escolhidas, com risco pequeno em cada uma.',
+    wealth: 'Para patrimônio, as memecoins entram como uma parte pequena da carteira, e o radar ajuda a escolher as melhores janelas.',
+    freedom: 'Para ter liberdade, os alertas chegam prontos: você executa em minutos e volta para a sua vida.',
+    learn: 'Para entender o mercado, as análises ao vivo mostram o raciocínio por trás de cada movimento.'
+  };
+  var TIME = {
+    short: 'Com até 15 minutos por dia, ative as notificações e opere só os alertas marcados como prioridade.',
+    mid: 'Com 30 a 60 minutos por dia, dá para acompanhar a leitura diária e uma análise ao vivo por semana.',
+    long: 'Com mais de 1 hora por dia, você aproveita o radar global inteiro e as análises ao vivo.',
+    weekend: 'Só com os fins de semana, comece pelas análises gravadas e pelos alertas de prazo mais longo.'
+  };
+
+  var qz = $('qz'), box = $('qz-box'), ans = {}, step = 0, opener = null;
+
+  function openQuiz(e) {
+    if (e) e.preventDefault();
+    opener = document.activeElement;
+    ans = {}; step = 0;
+    qz.hidden = false;
+    document.body.classList.add('locked');
+    renderStep();
+  }
+  function closeQuiz() {
+    qz.hidden = true;
+    document.body.classList.remove('locked');
+    if (opener && opener.focus) opener.focus();
+  }
+
+  function head(pct, label) {
+    return '<div class="qz-head"><span class="qz-step">' + label + '</span>' +
+      '<div class="qz-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+      '<button class="qz-x" type="button" data-close aria-label="Fechar o teste"><svg class="ic"><use href="#i-x"/></svg></button></div>';
+  }
+
+  function renderStep() {
+    var q = QUESTIONS[step];
+    var pct = Math.round(step / QUESTIONS.length * 100);
+    var html = head(pct, (step + 1) + ' de ' + QUESTIONS.length);
+    html += '<h2 class="qz-q" id="qz-title">' + q.q + '</h2>';
+    if (q.sub) html += '<p class="qz-sub">' + q.sub + '</p>';
+    html += '<div class="qz-opts">';
+    q.opts.forEach(function (o, i) {
+      var sel = ans[q.id] === o[1] ? ' sel' : '';
+      html += '<button class="qz-opt' + sel + '" type="button" data-v="' + o[1] + '"><kbd>' + String.fromCharCode(65 + i) + '</kbd><span>' + o[0] + '</span></button>';
+    });
+    html += '</div><div class="qz-foot">' +
+      (step > 0 ? '<button class="qz-back" type="button" data-back>← Voltar</button>' : '<span>Leva 60 segundos</span>') +
+      '<span>Suas respostas não são salvas</span></div>';
+    box.innerHTML = html;
+    var first = box.querySelector('.qz-opt');
+    if (first) first.focus();
+  }
+
+  function pick(v) {
+    var q = QUESTIONS[step];
+    ans[q.id] = v;
+    var btn = box.querySelector('[data-v="' + v + '"]');
+    if (btn) btn.classList.add('sel');
+    setTimeout(function () {
+      if (q.id === 'age' && v === 'minor') return showResult();
+      if (step < QUESTIONS.length - 1) { step++; renderStep(); }
+      else analyze();
+    }, 220);
+  }
+
+  function analyze() {
+    var items = ['Lendo seu perfil emocional', 'Cruzando com seu tempo disponível', 'Avaliando a origem do capital', 'Calculando sua compatibilidade com o método'];
+    box.innerHTML = head(100, 'Analisando') +
+      '<h2 class="qz-q" id="qz-title">Analisando suas respostas…</h2><div class="qz-load"><ul>' +
+      items.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>';
+    var lis = box.querySelectorAll('.qz-load li'), i = 0;
+    var iv = setInterval(function () {
+      if (i < lis.length) { lis[i].classList.add('on'); i++; }
+      else { clearInterval(iv); showResult(); }
+    }, 420);
+  }
+
+  function score() {
+    var s = 70;
+    s += { stop: 14, unknown: 9, hold: 5, panic: 3 }[ans.drop] || 0;
+    s += ans.commit === 'yes' ? 10 : 3;
+    s += { mid: 4, long: 4, short: 3, weekend: 1 }[ans.time] || 0;
+    s += ans.money === 'spare' ? 2 : 0;
+    return Math.min(98, s);
+  }
+
+  function showResult() {
+    var html;
+    if (ans.age === 'minor') {
+      html = head(100, 'Resultado') +
+        '<span class="res-label warn">RESULTADO</span>' +
+        '<h2 class="res-title" id="qz-title">Você ainda não pode operar.</h2>' +
+        '<p class="res-text">Corretoras exigem 18 anos, e o grupo também. Até lá, o melhor investimento é estudar: o que você aprender agora sobre mercado e risco vale muito mais depois.</p>' +
+        '<div class="res-actions"><button class="ghost" type="button" data-close>Fechar</button></div>';
+    } else if (ans.money === 'bills' || ans.money === 'debt') {
+      html = head(100, 'Resultado') +
+        '<span class="res-label warn">RESULTADO</span>' +
+        '<h2 class="res-title" id="qz-title">Ainda não é o seu momento de operar.</h2>' +
+        '<p class="res-text">Você indicou que usaria ' + (ans.money === 'debt' ? 'empréstimo ou cartão de crédito' : 'o dinheiro das contas') + '. Em memecoins, uma queda de 50% em um dia é comum. Com esse dinheiro, uma perda normal do mercado vira um problema na sua vida. Monte primeiro uma reserva que você aceite perder.</p>' +
+        '<ul class="res-list"><li>Separe uma reserva só para operar, fora das contas do mês.</li><li>Enquanto isso, você pode acompanhar o grupo só para aprender, sem operar.</li></ul>' +
+        '<div class="res-actions">' +
+        '<a class="ghost" data-tg href="' + CONFIG.telegram + '" target="_blank" rel="noopener">Entrar só para aprender, sem operar por enquanto</a>' +
+        '<button class="qz-back" type="button" data-restart>Refazer o teste</button></div>';
+    } else {
+      var pf = PROFILES[ans.drop] || PROFILES.unknown, sc = score();
+      var tip = ans.commit === 'try'
+        ? 'Ponto de atenção: “vou tentar” não basta com memecoins. No grupo, o stop vem pronto em todo alerta; o seu trabalho é só respeitar.'
+        : 'Seu compromisso com o stop é o que mais pesa a seu favor no teste.';
+      html = head(100, 'Resultado') +
+        '<span class="res-label">SEU RESULTADO</span>' +
+        '<h2 class="res-title" id="qz-title">Você está apto para operar com o método.</h2>' +
+        '<span class="res-chip"><svg class="ic" style="width:14px;height:14px"><use href="#i-check"/></svg>Perfil ' + pf.name + '</span>' +
+        '<div class="meter"><div class="meter-top"><span>Compatibilidade com o método</span><b>' + sc + '%</b></div><div class="meter-bar"><i id="qz-meter"></i></div></div>' +
+        '<p class="res-text">' + pf.text + '</p>' +
+        '<ul class="res-list"><li>' + (GOAL[ans.why] || GOAL.learn) + '</li><li>' + (TIME[ans.time] || TIME.mid) + '</li><li>' + tip + '</li></ul>' +
+        '<div class="res-actions">' +
+        '<a class="btn btn-lg" data-tg href="' + CONFIG.telegram + '" target="_blank" rel="noopener"><svg class="ic"><use href="#i-send"/></svg>Entrar no grupo do Telegram</a>' +
+        '<span class="btn-note" style="text-align:center">Seu acesso foi liberado · ative as notificações ao entrar</span>' +
+        '<button class="qz-back" type="button" data-restart>Refazer o teste</button></div>';
+    }
+    box.innerHTML = html;
+    var m = $('qz-meter');
+    if (m) requestAnimationFrame(function () { requestAnimationFrame(function () { m.style.width = score() + '%'; }); });
+    var f = box.querySelector('.btn, .ghost, [data-close]');
+    if (f) f.focus();
+  }
+
+  box.addEventListener('click', function (e) {
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-close')) return closeQuiz();
+    if (t.hasAttribute('data-back')) { step = Math.max(0, step - 1); return renderStep(); }
+    if (t.hasAttribute('data-restart')) { ans = {}; step = 0; return renderStep(); }
+    if (t.hasAttribute('data-v')) pick(t.getAttribute('data-v'));
+  });
+  qz.addEventListener('click', function (e) { if (e.target === qz) closeQuiz(); });
+  qz.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') return closeQuiz();
+    if (e.key === 'Tab') {
+      var f = box.querySelectorAll('button, a[href]');
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+  document.querySelectorAll('[data-quiz]').forEach(function (a) { a.addEventListener('click', openQuiz); });
 
   /* ----- barra fixa no celular ----- */
   var bar = $('mbar'), heroEnd = $('topo');
@@ -892,6 +1208,15 @@ ol.steps{list-style:none;margin:0;padding:0}
     bar.classList.toggle('show', past && !nearEnd);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  /* ----- vídeos de fundo: sem som, em loop; parados se o usuário pede menos movimento ----- */
+  var vids = document.querySelectorAll('.bgv video');
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  vids.forEach(function (v) {
+    v.muted = true;
+    if (calm) { v.removeAttribute('autoplay'); v.pause(); return; }
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
+  });
 
   /* ----- iniciar ----- */
   seed();
